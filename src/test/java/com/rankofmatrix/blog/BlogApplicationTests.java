@@ -40,29 +40,4 @@ class BlogApplicationTests {
         System.out.println(u1.toString());
     }
 
-
-    @RunWith(SpringRunner.class)
-    static class UserAPIServiceImplTest {
-
-        @TestConfiguration
-        static class UserAPIServiceImplTestConfiguration {
-
-            @Bean
-            public UserAPIService userAPIService() {
-                return new UserAPIServiceImpl();
-            }
-        }
-        @Autowired
-        private UserAPIService userAPIService;
-        @MockBean
-        private UserRepository userRepository;
-
-        @Test
-        public void testGetAllUsers() {
-            Iterable<User> result = this.userAPIService.getAllUsers();
-            System.out.println(result);
-        }
-
-    }
-
 }

@@ -17,11 +17,11 @@ public class EncryptorTest {
     @Test
     public void encry() {
         // 加密数据库用户名：testusername
-        String username = encryptor.encrypt("RankOfMatrix");
+        String username = encryptor.encrypt("testusername");
         System.out.println(username);
 
         // 加密数据库密码：testpassword
-        String password = encryptor.encrypt("ying8rui");
+        String password = encryptor.encrypt("testpassword");
         System.out.println(password);
     }
 }
