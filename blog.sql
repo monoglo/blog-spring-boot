@@ -1,0 +1,1 @@
+create table user (uid integer not null auto_increment, avatar_url varchar(255), email varchar(255), exp integer, last_login_time datetime, nickname varchar(255), password varchar(255), primary key (uid)) engine=InnoDB
