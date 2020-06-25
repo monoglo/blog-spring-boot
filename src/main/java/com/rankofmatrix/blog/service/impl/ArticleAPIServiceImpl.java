@@ -26,22 +26,22 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public List<Article> getAllArticleVisible() {
-        return articleRepository.getArticlesByStatus(0);
+        return articleRepository.findArticlesByStatus(0);
     }
 
     @Override
     public List<Article> getAllArticleDeleted() {
-        return articleRepository.getArticlesByStatus(1);
+        return articleRepository.findArticlesByStatus(1);
     }
 
     @Override
     public Article getArticleByAid(Integer aid) {
-        return articleRepository.getArticleByAid(aid);
+        return articleRepository.findArticleByAid(aid);
     }
 
     @Override
     public List<Article> getArticleWithoutTextByUid(Integer uid) {
-        return articleRepository.getArticlesByAuthorIdAndStatus(uid, 0);
+        return articleRepository.findArticlesByAuthorIdAndStatus(uid, 0);
     }
 
 //    @Override
@@ -56,12 +56,12 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public List<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
-        return articleRepository.getArticlesByTitleContainsAndStatus(titleKey, 0);
+        return articleRepository.findArticlesByTitleContainsAndStatus(titleKey, 0);
     }
 
     @Override
     public List<Article> selectArticleWithoutTextByKey(String key) {
-        return articleRepository.getArticlesByStatusAndTitleContainsOrStatusAndTextContains(0, key, 0, key);
+        return articleRepository.findArticlesByStatusAndTitleContainsOrStatusAndTextContains(0, key, 0, key);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public Boolean deleteArticleByAid(Integer aid) {
-        Article deleted_article = articleRepository.getArticleByAid(aid);
+        Article deleted_article = articleRepository.findArticleByAid(aid);
         if (deleted_article.getStatus() == 0) {
             deleted_article.setStatus(1);
             articleRepository.save(deleted_article);
