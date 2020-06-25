@@ -13,5 +13,5 @@ public interface ArticleRepository extends CrudRepository<Article, Integer> {
     // 获取标题中包含关键词的处于某一状态的所有文章
     Iterable<Article> getArticlesByTitleContainsAndStatus(String titleKey, Integer status);
     // 获取标题或正文中包含关键词的处于某一状态的所有文章
-    Iterable<Article> getArticlesByTitleContainsOrTextContainsAndStatus(String key1, String key2, Integer status);
+    Iterable<Article> getArticlesByStatusAndTitleContainsOrStatusAndTextContains(Integer status1, String key1, Integer status2, String key2);
 }

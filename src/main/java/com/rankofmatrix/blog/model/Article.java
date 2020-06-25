@@ -14,12 +14,12 @@ public class Article {
     @Column(name = "author_id")
     private Integer authorId;
     @Column(name = "create_time")
-    private Timestamp createTime;
+    private Timestamp createTime = new Timestamp(System.currentTimeMillis());
     @Column(name = "last_edit_time")
-    private Timestamp lastEditTime;
+    private Timestamp lastEditTime = new Timestamp(System.currentTimeMillis());
     @Column(name = "click_amount")
-    private Integer clickAmount;
-    private Integer status;
+    private Integer clickAmount = 0;
+    private Integer status = 0;
 
     public Integer getAid() {
         return aid;

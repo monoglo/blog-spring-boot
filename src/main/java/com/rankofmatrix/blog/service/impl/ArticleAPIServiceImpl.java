@@ -23,22 +23,22 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public Iterable<Article> getAllArticleVisible() {
-        return null;
+        return articleRepository.getArticlesByStatus(0);
     }
 
     @Override
     public Iterable<Article> getAllArticleDeleted() {
-        return null;
+        return articleRepository.getArticlesByStatus(1);
     }
 
     @Override
     public Article getArticleByAid(Integer aid) {
-        return null;
+        return articleRepository.getArticleByAid(aid);
     }
 
     @Override
     public Iterable<Article> getArticleWithoutTextByUid(Integer uid) {
-        return null;
+        return articleRepository.getArticlesByAuthorIdAndStatus(uid, 0);
     }
 
 //    @Override
@@ -53,22 +53,22 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public Iterable<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
-        return null;
+        return articleRepository.getArticlesByTitleContainsAndStatus(titleKey, 0);
     }
 
     @Override
-    public Iterable<Article> selectArticleWithoutTextByKey(String Key) {
-        return null;
+    public Iterable<Article> selectArticleWithoutTextByKey(String key) {
+        return articleRepository.getArticlesByStatusAndTitleContainsOrStatusAndTextContains(0, key, 0, key);
     }
 
     @Override
     public Article createArticleByArticle(Article newArticle) {
-        return null;
+        return articleRepository.save(newArticle);
     }
 
     @Override
     public Article modifyArticleByArticle(Article modifiedArticle) {
-        return null;
+        return articleRepository.save(modifiedArticle);
     }
 
 //    @Override
@@ -83,6 +83,13 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public Boolean deleteArticleByAid(Integer aid) {
-        return null;
+        Article deleted_article = articleRepository.getArticleByAid(aid);
+        if (deleted_article.getStatus() == 0) {
+            deleted_article.setStatus(1);
+            articleRepository.save(deleted_article);
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
     }
 }
