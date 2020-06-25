@@ -9,7 +9,7 @@ public interface UserAPIService {
     // 获取所有用户
     List<User> getAllUsers();
     // 用户注册
-    User registerUser(String nickname, String password, String email, String avatarUrl);
+    User registerUser(User registerUser);
     // 用户登录
-    User loginUser(User login_user);
+    User loginUser(User loginUser);
 }

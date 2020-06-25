@@ -25,19 +25,31 @@ public class UserAPIServiceImpl implements UserAPIService{
     }
 
     @Override
-    public User registerUser(String nickname, String password, String email, String avatarUrl) {
-        User register_user = new User();
-        register_user.setNickname(nickname);
-        register_user.setPassword(password);
-        register_user.setEmail(email);
-        register_user.setAvatarUrl(avatarUrl);
-        userRepository.save(register_user);
-        return register_user;
+    public User registerUser(User registerUser) {
+        if (userRepository.findByEmail(registerUser.getEmail()) == null) {
+            User checkedUser = new User();
+            checkedUser.setEmail(registerUser.getEmail());
+            checkedUser.setPassword(registerUser.getPassword());
+            checkedUser.setNickname(registerUser.getNickname());
+            return userRepository.save(checkedUser);
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public User loginUser(User login_user) {
-        return userRepository.findByEmailAndPassword(login_user.getEmail(), login_user.getPassword());
+    public User loginUser(User loginUser) {
+        User checkedUser;
+        checkedUser =  userRepository.findByEmail(loginUser.getEmail());
+        if (checkedUser != null) {
+            if (checkedUser.getPassword().equals(loginUser.getPassword())) {
+                return checkedUser;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
 }

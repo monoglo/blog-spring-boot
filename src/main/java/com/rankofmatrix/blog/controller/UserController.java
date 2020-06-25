@@ -20,8 +20,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public @ResponseBody User registerUser (@RequestBody String nickname, @RequestBody String password, @RequestBody String email, @RequestBody String avatarUrl) {
-        return userAPIService.registerUser(nickname, password, email, avatarUrl);
+    public @ResponseBody User registerUser (@RequestBody User registerUser) {
+        return userAPIService.registerUser(registerUser);
     }
 
     @GetMapping(path = "/")
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
-    public @ResponseBody User loginUser(@RequestBody User login_user) {
-        return userAPIService.loginUser(login_user);
+    public @ResponseBody User loginUser(@RequestBody User loginUser) {
+        return userAPIService.loginUser(loginUser);
     }
 }
