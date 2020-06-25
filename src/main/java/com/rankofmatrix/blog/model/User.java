@@ -14,9 +14,9 @@ public class User {
     String email;
     @Column(name = "avatar_url")
     String avatarUrl;
-    Integer exp;
+    Integer exp = 0;
     @Column(name = "last_login_time")
-    Timestamp lastLoginTime;
+    Timestamp lastLoginTime = new Timestamp(System.currentTimeMillis());
 
     public Integer getUid() {
         return uid;
