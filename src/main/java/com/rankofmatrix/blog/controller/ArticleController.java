@@ -3,7 +3,6 @@ package com.rankofmatrix.blog.controller;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.service.impl.ArticleAPIServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

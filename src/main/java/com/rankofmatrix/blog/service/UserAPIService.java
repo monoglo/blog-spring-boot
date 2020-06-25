@@ -1,7 +1,6 @@
 package com.rankofmatrix.blog.service;
 
 import com.rankofmatrix.blog.model.User;
-import com.rankofmatrix.blog.repository.UserRepository;
 
 import java.util.List;
 
