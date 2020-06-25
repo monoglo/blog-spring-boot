@@ -5,6 +5,9 @@ import com.rankofmatrix.blog.repository.ArticleRepository;
 import com.rankofmatrix.blog.service.ArticleAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 @Service
 public class ArticleAPIServiceImpl implements ArticleAPIService {
@@ -17,17 +20,17 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public Iterable<Article> getAllArticle() {
-        return articleRepository.findAll();
+    public List<Article> getAllArticle() {
+        return Lists.newArrayList(articleRepository.findAll());
     }
 
     @Override
-    public Iterable<Article> getAllArticleVisible() {
+    public List<Article> getAllArticleVisible() {
         return articleRepository.getArticlesByStatus(0);
     }
 
     @Override
-    public Iterable<Article> getAllArticleDeleted() {
+    public List<Article> getAllArticleDeleted() {
         return articleRepository.getArticlesByStatus(1);
     }
 
@@ -37,27 +40,27 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public Iterable<Article> getArticleWithoutTextByUid(Integer uid) {
+    public List<Article> getArticleWithoutTextByUid(Integer uid) {
         return articleRepository.getArticlesByAuthorIdAndStatus(uid, 0);
     }
 
 //    @Override
-//    public Iterable<Article> getArticleWithoutTextByTagID(Integer tagId) {
+//    public List<Article> getArticleWithoutTextByTagID(Integer tagId) {
 //        return null;
 //    }
 //
 //    @Override
-//    public Iterable<Article> getArticleWithoutTextByArchiveID(Integer archiveId) {
+//    public List<Article> getArticleWithoutTextByArchiveID(Integer archiveId) {
 //        return null;
 //    }
 
     @Override
-    public Iterable<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
+    public List<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
         return articleRepository.getArticlesByTitleContainsAndStatus(titleKey, 0);
     }
 
     @Override
-    public Iterable<Article> selectArticleWithoutTextByKey(String key) {
+    public List<Article> selectArticleWithoutTextByKey(String key) {
         return articleRepository.getArticlesByStatusAndTitleContainsOrStatusAndTextContains(0, key, 0, key);
     }
 

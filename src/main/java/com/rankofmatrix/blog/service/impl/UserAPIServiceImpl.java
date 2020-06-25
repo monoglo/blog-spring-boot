@@ -1,10 +1,13 @@
 package com.rankofmatrix.blog.service.impl;
 
+import com.google.common.collect.Lists;
 import com.rankofmatrix.blog.model.User;
 import com.rankofmatrix.blog.repository.UserRepository;
 import com.rankofmatrix.blog.service.UserAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserAPIServiceImpl implements UserAPIService{
@@ -17,8 +20,8 @@ public class UserAPIServiceImpl implements UserAPIService{
     }
 
     @Override
-    public  Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers() {
+        return Lists.newArrayList(userRepository.findAll());
     }
 
     @Override

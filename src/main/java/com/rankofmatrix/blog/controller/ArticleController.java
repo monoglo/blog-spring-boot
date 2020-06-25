@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping(path = "/articles")
 public class ArticleController {
@@ -20,19 +22,20 @@ public class ArticleController {
 
     // 获取所有文章
     @GetMapping(path = "/")
-    public @ResponseBody Iterable<Article> getAllArticle() {
+    public @ResponseBody
+    List<Article> getAllArticle() {
         return articleAPIService.getAllArticle();
     }
 
     // 获取所有可见的文章
     @GetMapping(path = "/visible")
-    public @ResponseBody Iterable<Article> getAllArticleVisible() {
+    public @ResponseBody List<Article> getAllArticleVisible() {
         return articleAPIService.getAllArticleVisible();
     }
 
     // 获取所有被删除的文章
     @GetMapping(path = "/deleted")
-    public @ResponseBody Iterable<Article> getAllArticleDeleted() {
+    public @ResponseBody List<Article> getAllArticleDeleted() {
         return articleAPIService.getAllArticleDeleted();
     }
 
@@ -44,19 +47,19 @@ public class ArticleController {
 
     // 获取某一作者的所有文章(不带正文)
     @GetMapping(path = "/uid/{uid}")
-    public @ResponseBody Iterable<Article> getArticleWithoutTextByUid(@PathVariable(value = "uid") Integer uid) {
+    public @ResponseBody List<Article> getArticleWithoutTextByUid(@PathVariable(value = "uid") Integer uid) {
         return articleAPIService.getArticleWithoutTextByUid(uid);
     }
 
     // 检索标题中包含关键字的所有文章(不带正文)
     @GetMapping(path = "/titleKey/{titleKey}")
-    public @ResponseBody Iterable<Article> selectArticleWithoutTextByTitleKey(@PathVariable(value = "titleKey") String titleKey) {
+    public @ResponseBody List<Article> selectArticleWithoutTextByTitleKey(@PathVariable(value = "titleKey") String titleKey) {
         return articleAPIService.selectArticleWithoutTextByTitleKey(titleKey);
     }
 
     // 检索模糊搜索带有关键字的所有文章(不带正文)
     @GetMapping(path = "/key/{key}")
-    public @ResponseBody Iterable<Article> selectArticleWithoutTextByKey(@PathVariable(value = "key") String key) {
+    public @ResponseBody List<Article> selectArticleWithoutTextByKey(@PathVariable(value = "key") String key) {
         return articleAPIService.selectArticleWithoutTextByKey(key);
     }
 

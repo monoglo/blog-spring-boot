@@ -50,7 +50,7 @@ class UserAPIServiceImplTest {
         userList.add(user);
         when(userRepository.findAll()).thenReturn(userList);
 
-        Iterable<User> finalList = userAPIServiceImpl.getAllUsers();
+        List<User> finalList = userAPIServiceImpl.getAllUsers();
 
         System.out.println(finalList);
     }
