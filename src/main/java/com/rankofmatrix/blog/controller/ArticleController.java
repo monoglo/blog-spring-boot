@@ -125,9 +125,9 @@ public class ArticleController {
         }
     }
 
-    // 修改某一ID的文章(包含被删除)
+    // 修改某一文章(包含被删除)
     @PutMapping(path = "/")
-    @ApiOperation("修改某一ID的文章(包含被删除)")
+    @ApiOperation("修改文章(包含被删除)")
     @ApiImplicitParam(name = "updateArticle", value = "将要修改的文章信息", required = true, dataType = "Article")
     public JsonResponse modifyArticleByArticle(@RequestBody Article updateArticle) {
         Article modifiedArticle = articleAPIService.modifyArticleByArticle(updateArticle);
@@ -139,7 +139,7 @@ public class ArticleController {
     }
 
     // TODO 添加标签到某一文章 API
-    @PutMapping(path = "/add/tag/archiveId")
+    @PutMapping(path = "/add/tag/tagId")
     public JsonResponse addTagToArticleByAidAndTagId() {
         return null;
     }
