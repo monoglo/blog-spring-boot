@@ -12,7 +12,7 @@ public class Tag {
     @Column(name = "tag_name")
     private String tagName;
     @Column(name = "article_amount")
-    private Integer articleAmount;
+    private Integer articleAmount = 0;
 
     public Integer getTagId() {
         return tagId;

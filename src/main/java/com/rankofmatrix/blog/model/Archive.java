@@ -12,7 +12,7 @@ public class Archive {
     @Column(name = "archive_name")
     private String archiveName;
     @Column(name = "article_amount")
-    private Integer articleAmount;
+    private Integer articleAmount = 0;
 
     public Integer getArchiveId() {
         return archiveId;
