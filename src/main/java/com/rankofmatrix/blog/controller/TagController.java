@@ -33,10 +33,11 @@ public class TagController {
     @ApiOperation("获取所有标签")
     public JsonResponse getAllTags() {
         List<Tag> resultTags = tagService.getAllTags();
-        if (resultTags.size() > 0) {
-            return new JsonResponse(200, "Get all tags successfully", resultTags);
+        int resultLength = resultTags.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get all tags successfully", resultLength, resultTags);
         } else {
-            return new JsonResponse(404, "Get no tag", null);
+            return new JsonResponse(404, "Get no tag", 0, null);
         }
     }
 
@@ -47,9 +48,9 @@ public class TagController {
     public JsonResponse getTagByTagId(@PathVariable(value = "id") Integer tagId) {
         Tag resultTag = tagService.getTagByTagId(tagId);
         if (resultTag != null) {
-            return new JsonResponse(200, "Get tag successfully", resultTag);
+            return new JsonResponse(200, "Get tag successfully", 1, resultTag);
         } else {
-            return new JsonResponse(404, "Get tag failed", null);
+            return new JsonResponse(404, "Get tag failed", 0, null);
         }
     }
 
@@ -60,9 +61,9 @@ public class TagController {
     public JsonResponse getTagByTagName(@PathVariable(value = "name") String tagName) {
         Tag resultTag = tagService.getTagByTagName(tagName);
         if (resultTag != null) {
-            return new JsonResponse(200, "Get tag successfully", resultTag);
+            return new JsonResponse(200, "Get tag successfully", 1, resultTag);
         } else {
-            return new JsonResponse(404, "Get tag failed", null);
+            return new JsonResponse(404, "Get tag failed", 0, null);
         }
     }
 
@@ -72,10 +73,11 @@ public class TagController {
     @ApiImplicitParam(name = "nameKey", value = "要检索标签的检索Name关键字", required = true, dataType = "String")
     public JsonResponse selectTagsByTagNameKey(@PathVariable(value = "nameKey") String nameKey) {
         List<Tag> resultTags = tagService.selectTagsByTagNameKey(nameKey);
-        if (resultTags.size() > 0) {
-            return new JsonResponse(200, "Search tags successfully", resultTags);
+        int resultLength = resultTags.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Search tags successfully", resultLength, resultTags);
         } else {
-            return new JsonResponse(404, "Search has no found", null);
+            return new JsonResponse(404, "Search has no found", 0, null);
         }
     }
 
@@ -86,9 +88,9 @@ public class TagController {
     public JsonResponse createTagByTag(@RequestBody Tag newTag) {
         Tag resultTag = tagService.createTagByTag(newTag);
         if (resultTag != null) {
-            return new JsonResponse(200, "Create tag successfully", resultTag);
+            return new JsonResponse(200, "Create tag successfully", 1, resultTag);
         } else {
-            return new JsonResponse(403, "Create tag failed", null);
+            return new JsonResponse(403, "Create tag failed", 0, null);
         }
     }
 
@@ -99,9 +101,9 @@ public class TagController {
     public JsonResponse updateTagByTag(@RequestBody Tag modifiedTag) {
         Tag resultTag = tagService.modifyTagByTag(modifiedTag);
         if (resultTag != null) {
-            return new JsonResponse(200, "Update tag successfully", resultTag);
+            return new JsonResponse(200, "Update tag successfully", 1, resultTag);
         } else {
-            return new JsonResponse(403, "Update tag failed", null);
+            return new JsonResponse(403, "Update tag failed", 0, null);
         }
     }
 
@@ -113,9 +115,9 @@ public class TagController {
     public JsonResponse deleteTagByTagId(@PathVariable(value = "id") Integer tagId) {
         Integer result = tagService.deleteTagByTagId(tagId);
         if (result == 1) {
-            return new JsonResponse(200, "Delete tag successfully", null);
+            return new JsonResponse(200, "Delete tag successfully", 0, null);
         } else {
-            return new JsonResponse(403, "Delete tag Failed, tag may not exists", null);
+            return new JsonResponse(403, "Delete tag Failed, tag may not exists", 0, null);
         }
     }
 

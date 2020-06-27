@@ -17,9 +17,9 @@ import java.util.List;
         @Tag(name = "Archives API", description = "RESTful Archive API")
 })
 public class ArchiveController {
-    
+
     private ArchiveServiceImpl archiveService;
-    
+
     @Autowired
     public void setArchiveService(ArchiveServiceImpl archiveService) {
         this.archiveService = archiveService;
@@ -30,10 +30,11 @@ public class ArchiveController {
     @ApiOperation("获取所有归档")
     public JsonResponse getAllArchives() {
         List<Archive> resultArchives = archiveService.getAllArchives();
-        if (resultArchives.size() > 0) {
-            return new JsonResponse(200, "Get all archives successfully", resultArchives);
+        int resultLength = resultArchives.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get all archives successfully", resultLength, resultArchives);
         } else {
-            return new JsonResponse(404, "Get no archive", null);
+            return new JsonResponse(404, "Get no archive", 0, null);
         }
     }
 
@@ -44,9 +45,9 @@ public class ArchiveController {
     public JsonResponse getArchiveByArchiveId(@PathVariable(value = "id") Integer archiveId) {
         Archive resultArchive = archiveService.getArchiveByArchiveId(archiveId);
         if (resultArchive != null) {
-            return new JsonResponse(200, "Get archive successfully", resultArchive);
+            return new JsonResponse(200, "Get archive successfully", 1, resultArchive);
         } else {
-            return new JsonResponse(404, "Get archive failed", null);
+            return new JsonResponse(404, "Get archive failed", 0, null);
         }
     }
 
@@ -57,9 +58,9 @@ public class ArchiveController {
     public JsonResponse getArchiveByArchiveName(@PathVariable(value = "name") String archiveName) {
         Archive resultArchive = archiveService.getArchiveByArchiveName(archiveName);
         if (resultArchive != null) {
-            return new JsonResponse(200, "Get archive successfully", resultArchive);
+            return new JsonResponse(200, "Get archive successfully", 1, resultArchive);
         } else {
-            return new JsonResponse(404, "Get archive failed", null);
+            return new JsonResponse(404, "Get archive failed", 0, null);
         }
     }
 
@@ -69,10 +70,11 @@ public class ArchiveController {
     @ApiImplicitParam(name = "nameKey", value = "要检索归档的检索Name关键字", required = true, dataType = "String")
     public JsonResponse selectArchivesByArchiveNameKey(@PathVariable(value = "nameKey") String nameKey) {
         List<Archive> resultArchives = archiveService.selectArchivesByArchiveNameKey(nameKey);
-        if (resultArchives.size() > 0) {
-            return new JsonResponse(200, "Search archives successfully", resultArchives);
+        int resultLength = resultArchives.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Search archives successfully", resultLength, resultArchives);
         } else {
-            return new JsonResponse(404, "Search has no found", null);
+            return new JsonResponse(404, "Search has no found", 0, null);
         }
     }
 
@@ -83,9 +85,9 @@ public class ArchiveController {
     public JsonResponse createArchiveByArchive(@RequestBody Archive newArchive) {
         Archive resultArchive = archiveService.createArchiveByArchive(newArchive);
         if (resultArchive != null) {
-            return new JsonResponse(200, "Create archive successfully", resultArchive);
+            return new JsonResponse(200, "Create archive successfully", 1, resultArchive);
         } else {
-            return new JsonResponse(403, "Create archive failed", null);
+            return new JsonResponse(403, "Create archive failed", 0, null);
         }
     }
 
@@ -96,9 +98,9 @@ public class ArchiveController {
     public JsonResponse updateArchiveByArchive(@RequestBody Archive modifiedArchive) {
         Archive resultArchive = archiveService.modifyArchiveByArchive(modifiedArchive);
         if (resultArchive != null) {
-            return new JsonResponse(200, "Update archive successfully", resultArchive);
+            return new JsonResponse(200, "Update archive successfully", 1, resultArchive);
         } else {
-            return new JsonResponse(403, "Update archive failed", null);
+            return new JsonResponse(403, "Update archive failed", 0, null);
         }
     }
 
@@ -110,9 +112,9 @@ public class ArchiveController {
     public JsonResponse deleteArchiveByArchiveId(@PathVariable(value = "id") Integer archiveId) {
         Integer result = archiveService.deleteArchiveByArchiveId(archiveId);
         if (result == 1) {
-            return new JsonResponse(200, "Delete archive successfully", null);
+            return new JsonResponse(200, "Delete archive successfully", 0, null);
         } else {
-            return new JsonResponse(403, "Delete archive Failed, archive may not exists", null);
+            return new JsonResponse(403, "Delete archive Failed, archive may not exists", 0, null);
         }
     }
 

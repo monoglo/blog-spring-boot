@@ -3,11 +3,13 @@ package com.rankofmatrix.blog.model;
 public class JsonResponse {
     private Integer code;
     private String message;
+    private Integer length;
     private Object data;
 
-    public JsonResponse(Integer code, String message, Object data) {
+    public JsonResponse(Integer code, String message, Integer length, Object data) {
         this.code = code;
         this.message = message;
+        this.length = length;
         this.data = data;
     }
 
@@ -33,5 +35,13 @@ public class JsonResponse {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
     }
 }

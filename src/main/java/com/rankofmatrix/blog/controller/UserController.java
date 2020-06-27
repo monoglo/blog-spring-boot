@@ -30,9 +30,9 @@ public class UserController {
     public JsonResponse registerUser (@RequestBody User registerUser) {
         User resultUser = userAPIService.registerUser(registerUser);
         if (resultUser != null) {
-            return new JsonResponse(201, "Register successfully", resultUser);
+            return new JsonResponse(201, "Register successfully", 1, resultUser);
         } else {
-            return new JsonResponse(409, "Error: Email exists", null);
+            return new JsonResponse(409, "Error: Email exists", 0, null);
         }
     }
 
@@ -40,10 +40,11 @@ public class UserController {
     @GetMapping(path = "/")
     public JsonResponse getAllUsers() {
         List<User> resultUsers = userAPIService.getAllUsers();
-        if (resultUsers.size() > 0) {
-            return new JsonResponse(200, "Get all users successfully", resultUsers);
+        int resultLength = resultUsers.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get all users successfully", resultLength, resultUsers);
         } else {
-            return new JsonResponse(404, "Get no user", resultUsers);
+            return new JsonResponse(404, "Get no user", 0, null);
         }
     }
 
@@ -53,9 +54,9 @@ public class UserController {
     public JsonResponse loginUser(@RequestBody User loginUser) {
         User resultUser = userAPIService.loginUser(loginUser);
         if (resultUser != null) {
-            return new JsonResponse(200, "Login successfully", resultUser);
+            return new JsonResponse(200, "Login successfully", 1, resultUser);
         } else {
-            return new JsonResponse(401, "Error: The email or password was not correct", null);
+            return new JsonResponse(401, "Error: The email or password was not correct", 0, null);
         }
     }
 }

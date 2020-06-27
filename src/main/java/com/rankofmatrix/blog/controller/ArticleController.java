@@ -29,10 +29,11 @@ public class ArticleController {
     @ApiOperation("获取所有文章(包含被删除)")
     public JsonResponse getAllArticle() {
         List<Article> resultArticles = articleAPIService.getAllArticle();
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Get all articles successfully", resultArticles);
+        int resultLength = resultArticles.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get all articles successfully", resultLength, resultArticles);
         } else {
-            return new JsonResponse(404, "Get no article", null);
+            return new JsonResponse(404, "Get no article", 0, null);
         }
     }
 
@@ -41,10 +42,11 @@ public class ArticleController {
     @ApiOperation("获取所有可见的文章")
     public JsonResponse getAllArticleVisible() {
         List<Article> resultArticles = articleAPIService.getAllArticleVisible();
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Get all articles successfully", resultArticles);
+        int resultLength = resultArticles.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get all articles successfully", resultLength, resultArticles);
         } else {
-            return new JsonResponse(404, "Get no article", null);
+            return new JsonResponse(404, "Get no article", 0, null);
         }
     }
 
@@ -53,10 +55,11 @@ public class ArticleController {
     @ApiOperation("获取所有被删除的文章")
     public JsonResponse getAllArticleDeleted() {
         List<Article> resultArticles = articleAPIService.getAllArticleDeleted();
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Get all articles successfully", resultArticles);
+        int resultLength = resultArticles.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get all articles successfully", resultLength, resultArticles);
         } else {
-            return new JsonResponse(404, "Get no article", null);
+            return new JsonResponse(404, "Get no article", 0, null);
         }
     }
 
@@ -67,9 +70,9 @@ public class ArticleController {
     public JsonResponse getArticleByAid(@PathVariable(value = "aid") Integer aid) {
         Article resultArticle = articleAPIService.getArticleByAid(aid);
         if (resultArticle != null) {
-            return new JsonResponse(200, "Get article successfully", resultArticle);
+            return new JsonResponse(200, "Get article successfully", 1, resultArticle);
         } else {
-            return new JsonResponse(404, "Article not found", null);
+            return new JsonResponse(404, "Article not found", 0, null);
         }
     }
 
@@ -79,10 +82,11 @@ public class ArticleController {
     @ApiImplicitParam(name = "uid", value = "作者ID", required = true, dataType = "Int")
     public JsonResponse getArticleWithoutTextByUid(@PathVariable(value = "uid") Integer uid) {
         List<Article> resultArticles = articleAPIService.getArticleWithoutTextByUid(uid);
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Get author's all articles successfully", resultArticles);
+        int resultLength = resultArticles.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get author's all articles successfully", resultLength, resultArticles);
         } else {
-            return new JsonResponse(404, "Author has no article", null);
+            return new JsonResponse(404, "Author has no article", 0, null);
         }
     }
 
@@ -92,10 +96,11 @@ public class ArticleController {
     @ApiImplicitParam(name = "titleKey", value = "标题检索关键词", required = true, dataType = "String")
     public JsonResponse selectArticleWithoutTextByTitleKey(@PathVariable(value = "titleKey") String titleKey) {
         List<Article> resultArticles = articleAPIService.selectArticleWithoutTextByTitleKey(titleKey);
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Search articles successfully", resultArticles);
+        int resultLength = resultArticles.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Search articles successfully", resultLength, resultArticles);
         } else {
-            return new JsonResponse(404, "Search has not found", null);
+            return new JsonResponse(404, "Search has not found", 0, null);
         }
     }
 
@@ -105,10 +110,11 @@ public class ArticleController {
     @ApiImplicitParam(name = "key", value = "全文检索关键词", required = true, dataType = "String")
     public JsonResponse selectArticleWithoutTextByKey(@PathVariable(value = "key") String key) {
         List<Article> resultArticles = articleAPIService.selectArticleWithoutTextByKey(key);
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Search articles successfully", resultArticles);
+        int resultLength = resultArticles.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Search articles successfully", resultLength, resultArticles);
         } else {
-            return new JsonResponse(404, "Search has not found", null);
+            return new JsonResponse(404, "Search has not found", 0, null);
         }
     }
 
@@ -119,9 +125,9 @@ public class ArticleController {
     public JsonResponse createArticleByArticle(@RequestBody Article createArticle) {
         Article createdArticle = articleAPIService.createArticleByArticle(createArticle);
         if (createdArticle != null) {
-            return new JsonResponse(201, "Create article successfully", createdArticle);
+            return new JsonResponse(201, "Create article successfully", 1, createdArticle);
         } else {
-            return new JsonResponse(403, "Create article Failed", null);
+            return new JsonResponse(403, "Create article Failed", 0, null);
         }
     }
 
@@ -132,9 +138,9 @@ public class ArticleController {
     public JsonResponse modifyArticleByArticle(@RequestBody Article updateArticle) {
         Article modifiedArticle = articleAPIService.modifyArticleByArticle(updateArticle);
         if (modifiedArticle != null) {
-            return new JsonResponse(200, "Update article successfully", modifiedArticle);
+            return new JsonResponse(200, "Update article successfully", 1, modifiedArticle);
         } else {
-            return new JsonResponse(403, "Update article Failed", null);
+            return new JsonResponse(403, "Update article Failed", 0, null);
         }
     }
 
@@ -157,9 +163,9 @@ public class ArticleController {
     public JsonResponse deleteArticleByAid(@PathVariable(value = "aid") Integer aid) {
         Boolean result = articleAPIService.deleteArticleByAid(aid);
         if (result) {
-            return new JsonResponse(200, "Delete article successfully", null);
+            return new JsonResponse(200, "Delete article successfully", 0, null);
         } else {
-            return new JsonResponse(403, "Delete article Failed, article may not exists", null);
+            return new JsonResponse(403, "Delete article Failed, article may not exists", 0, null);
         }
     }
 
