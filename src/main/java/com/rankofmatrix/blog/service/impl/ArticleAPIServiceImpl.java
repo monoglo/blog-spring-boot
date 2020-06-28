@@ -1,22 +1,39 @@
 package com.rankofmatrix.blog.service.impl;
 
+import com.rankofmatrix.blog.model.ArchiveAndArticle;
 import com.rankofmatrix.blog.model.Article;
+import com.rankofmatrix.blog.model.TagAndArticle;
+import com.rankofmatrix.blog.repository.ArchiveAndArticleRepository;
 import com.rankofmatrix.blog.repository.ArticleRepository;
+import com.rankofmatrix.blog.repository.TagAndArticleRepository;
 import com.rankofmatrix.blog.service.ArticleAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     private ArticleRepository articleRepository;
+    private TagAndArticleRepository tagAndArticleRepository;
+    private ArchiveAndArticleRepository archiveAndArticleRepository;
 
     @Autowired
     public void setArticleRepository(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
+    }
+
+    @Autowired
+    public void setTagAndArticleRepository(TagAndArticleRepository tagAndArticleRepository) {
+        this.tagAndArticleRepository = tagAndArticleRepository;
+    }
+
+    @Autowired
+    public void setArchiveAndArticle(ArchiveAndArticleRepository archiveAndArticleRepository) {
+        this.archiveAndArticleRepository = archiveAndArticleRepository;
     }
 
     @Override
@@ -74,15 +91,32 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         return articleRepository.save(modifiedArticle);
     }
 
-//    @Override
-//    public Boolean addTagToArticleByAidAndTagId(Integer aid, Integer tagId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Boolean addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) {
-//        return null;
-//    }
+    @Override
+    public Boolean addTagToArticleByAidAndTagId(Integer aid, Integer tagId) {
+        TagAndArticle newTagAndArticle = new TagAndArticle();
+        newTagAndArticle.setArticleId(aid);
+        newTagAndArticle.setTagId(tagId);
+        tagAndArticleRepository.save(newTagAndArticle);
+        if (newTagAndArticle.getTagArticleId() != null) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    public Boolean addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) {
+        ArchiveAndArticle newArchiveAndArticle = new ArchiveAndArticle();
+        newArchiveAndArticle.setArticleId(aid);
+        newArchiveAndArticle.setArchiveId(archiveId);
+        archiveAndArticleRepository.save(newArchiveAndArticle);
+        if (newArchiveAndArticle.getArchiveArticleId() != null) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
 
     @Override
     public Boolean deleteArticleByAid(Integer aid) {

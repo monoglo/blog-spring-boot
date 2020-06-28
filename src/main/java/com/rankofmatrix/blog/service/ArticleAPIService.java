@@ -33,10 +33,10 @@ public interface ArticleAPIService {
 
     // 修改某一文章
     Article modifyArticleByArticle(Article modifiedArticle);
-//    // 添加标签到某一文章
-//    Boolean addTagToArticleByAidAndTagId(Integer aid, Integer tagId);
-//    // 添加归档到某一文章
-//    Boolean addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId);
+    // 添加标签到某一文章
+    Boolean addTagToArticleByAidAndTagId(Integer aid, Integer tagId);
+    // 添加归档到某一文章
+    Boolean addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId);
 
     // 删除某一ID的文章
     Boolean deleteArticleByAid(Integer aid);
