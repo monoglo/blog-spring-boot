@@ -118,6 +118,10 @@ public class ArticleController {
         }
     }
 
+    // TODO 查看含有某一标签的所有文章
+
+    // TODO 查看某一归档内的所有文章
+
     // 创建新的文章
     @PostMapping(path = "/")
     @ApiOperation("创建新的文章")
@@ -144,16 +148,26 @@ public class ArticleController {
         }
     }
 
-    // TODO 添加标签到某一文章 API
-    @PutMapping(path = "/add/tag/tagId")
-    public JsonResponse addTagToArticleByAidAndTagId() {
-        return null;
+    // 添加标签到某一文章
+    @PutMapping(path = "/aid/{aid}/add/tag/{tagId}")
+    public JsonResponse addTagToArticleByAidAndTagId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "tagId") Integer tagId) {
+        Boolean result = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
+        if (result) {
+            return new JsonResponse(200, "Add Tag successfully", 0, null);
+        } else {
+            return new JsonResponse(403, "Add Tag Failed", 0, null);
+        }
     }
 
-    // TODO 添加归档到某一文章 API
-    @PutMapping(path = "/add/archive/archiveId")
-    public JsonResponse addArchiveToArticleByAidAndArchiveId() {
-        return null;
+    // 添加归档到某一文章
+    @PutMapping(path = "aid/{aid}/add/archive/{archiveId}")
+    public JsonResponse addArchiveToArticleByAidAndArchiveId(@PathVariable(value = "aid")Integer aid, @PathVariable(value = "archiveId") Integer archiveId)  {
+        Boolean result = articleAPIService.addArchiveToArticleByAidAndArchiveId(aid, archiveId);
+        if (result) {
+            return new JsonResponse(200, "Add Archive successfully", 0, null);
+        } else {
+            return new JsonResponse(403, "Add Archive failed", 0, null);
+        }
     }
 
     // 删除某一ID的文章
