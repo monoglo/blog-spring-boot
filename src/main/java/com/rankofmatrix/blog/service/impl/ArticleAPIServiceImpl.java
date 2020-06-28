@@ -61,15 +61,30 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         return articleRepository.findArticlesByAuthorIdAndStatus(uid, 0);
     }
 
-//    @Override
-//    public List<Article> getArticleWithoutTextByTagID(Integer tagId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public List<Article> getArticleWithoutTextByArchiveID(Integer archiveId) {
-//        return null;
-//    }
+    @Override
+    public List<Article> getArticleWithoutTextByTagID(Integer tagId) {
+        // 得到Tag和Article的关联记录
+        List<TagAndArticle> resultTagAndArticles = tagAndArticleRepository.findTagAndArticlesByTagId(tagId);
+        // 初始化List
+        List<Article> resultArticles = new LinkedList<>();
+        // 遍历resultTagAndArticles生成resultArticles
+        for (TagAndArticle tagAndArticle : resultTagAndArticles) {
+            Integer articleId = tagAndArticle.getArticleId();
+            resultArticles.add(articleRepository.findArticleByAid(articleId));
+        }
+        return resultArticles;
+    }
+
+    @Override
+    public List<Article> getArticleWithoutTextByArchiveID(Integer archiveId) {
+        List<ArchiveAndArticle> resultArchiveAndArticles = archiveAndArticleRepository.findArchiveAndArticlesByArchiveId(archiveId);
+        List<Article> resultArticles = new LinkedList<>();
+        for (ArchiveAndArticle archiveAndArticle : resultArchiveAndArticles) {
+            Integer articleId = archiveAndArticle.getArticleId();
+            resultArticles.add(articleRepository.findArticleByAid(articleId));
+        }
+        return resultArticles;
+    }
 
     @Override
     public List<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
