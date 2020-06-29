@@ -9,34 +9,34 @@ public class ArchiveAndArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "archive_article_id")
-    private Integer ArchiveArticleId;
+    private Integer archiveArticleId;
     @Column(name = "archive_id")
-    private Integer ArchiveId;
+    private Integer archiveId;
     @Column(name = "article_id")
-    private Integer ArticleId;
+    private Integer articleId;
 
     public Integer getArchiveArticleId() {
-        return ArchiveArticleId;
+        return archiveArticleId;
     }
 
     public void setArchiveArticleId(Integer archiveArticleId) {
-        ArchiveArticleId = archiveArticleId;
+        this.archiveArticleId = archiveArticleId;
     }
 
     public Integer getArchiveId() {
-        return ArchiveId;
+        return archiveId;
     }
 
     public void setArchiveId(Integer archiveId) {
-        ArchiveId = archiveId;
+        this.archiveId = archiveId;
     }
 
     public Integer getArticleId() {
-        return ArticleId;
+        return articleId;
     }
 
     public void setArticleId(Integer articleId) {
-        ArticleId = articleId;
+        this.articleId = articleId;
     }
 
     @Override
@@ -44,22 +44,22 @@ public class ArchiveAndArticle {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArchiveAndArticle that = (ArchiveAndArticle) o;
-        return Objects.equals(ArchiveArticleId, that.ArchiveArticleId) &&
-                Objects.equals(ArchiveId, that.ArchiveId) &&
-                Objects.equals(ArticleId, that.ArticleId);
+        return Objects.equals(archiveArticleId, that.archiveArticleId) &&
+                Objects.equals(archiveId, that.archiveId) &&
+                Objects.equals(articleId, that.articleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ArchiveArticleId, ArchiveId, ArticleId);
+        return Objects.hash(archiveArticleId, archiveId, articleId);
     }
 
     @Override
     public String toString() {
         return "ArchiveAndArticle{" +
-                "ArchiveArticleId=" + ArchiveArticleId +
-                ", ArchiveId=" + ArchiveId +
-                ", ArticleId=" + ArticleId +
+                "ArchiveArticleId=" + archiveArticleId +
+                ", archiveId=" + archiveId +
+                ", articleId=" + articleId +
                 '}';
     }
 }
