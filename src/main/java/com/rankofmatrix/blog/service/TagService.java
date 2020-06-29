@@ -17,6 +17,9 @@ public interface TagService {
     // 模糊搜索TagName中包含关键字的所有标签
     List<Tag> selectTagsByTagNameKey(String tagNameKey);
 
+    // 获取某一ID文章的所有标签
+    List<Tag> getTagsByAid(Integer aid);
+
     // 创建新的标签
     Tag createTagByTag(Tag newTag);
 

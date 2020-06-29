@@ -81,6 +81,20 @@ public class TagController {
         }
     }
 
+    // TODO 获取某一AID的文章的所有标签
+    @GetMapping(path = "/aid/{aid}")
+    public JsonResponse selectTagsByAid(@PathVariable(value = "aid")Integer aid) {
+        List<Tag> resultTags = tagService.getTagsByAid(aid);
+        int resultLength = resultTags.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get tags by aid successfully", resultLength, resultTags);
+        } else {
+            return new JsonResponse(404, "Get no tags", 0, null);
+        }
+    }
+
+    // TODO 添加某一AID的文章到某一tagID的标签 （可选）
+
     // 创建新的标签
     @PostMapping(path = "/")
     @ApiOperation("创建新的标签")
