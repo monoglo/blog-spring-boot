@@ -81,8 +81,10 @@ public class TagController {
         }
     }
 
-    // TODO 获取某一AID的文章的所有标签
+    // 获取某一AID的文章的所有标签
     @GetMapping(path = "/aid/{aid}")
+    @ApiOperation("获取某一AID的文章的所有标签")
+    @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int")
     public JsonResponse selectTagsByAid(@PathVariable(value = "aid")Integer aid) {
         List<Tag> resultTags = tagService.getTagsByAid(aid);
         int resultLength = resultTags.size();

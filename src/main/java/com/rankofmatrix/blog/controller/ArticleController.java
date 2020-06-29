@@ -148,8 +148,13 @@ public class ArticleController {
         }
     }
 
-    // 添加标签到某一文章
+    // 添加某一ID标签到某一ID文章
     @PutMapping(path = "/aid/{aid}/add/tag/{tagId}")
+    @ApiOperation("添加某一ID标签到某一ID文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "tagId", value = "标签的ID", required = true, dataType = "int")
+    })
     public JsonResponse addTagToArticleByAidAndTagId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "tagId") Integer tagId) {
         Boolean result = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
         if (result) {
@@ -159,8 +164,13 @@ public class ArticleController {
         }
     }
 
-    // 添加归档到某一文章
+    // 添加某一ID归档到某一ID文章
     @PutMapping(path = "aid/{aid}/add/archive/{archiveId}")
+    @ApiOperation("添加某一ID归档到某一ID文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "archiveId", value = "归档的ID", required = true, dataType = "int")
+    })
     public JsonResponse addArchiveToArticleByAidAndArchiveId(@PathVariable(value = "aid")Integer aid, @PathVariable(value = "archiveId") Integer archiveId)  {
         Boolean result = articleAPIService.addArchiveToArticleByAidAndArchiveId(aid, archiveId);
         if (result) {
