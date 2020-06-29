@@ -17,6 +17,9 @@ public interface ArchiveService {
     // 模糊搜索ArchiveName中包含关键字的所有归档
     List<Archive> selectArchivesByArchiveNameKey(String archiveNameKey);
 
+    // 获取某一ID文章的所有归档
+    List<Archive> getArchivesByAid(Integer aid);
+
     // 创建一个新的归档
     Archive createArchiveByArchive(Archive newArchive);
 

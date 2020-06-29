@@ -78,6 +78,21 @@ public class ArchiveController {
         }
     }
 
+    // 获取某一AID文章的所有归档
+    @GetMapping(path = "/aid/{aid}")
+    @ApiOperation("获取某一AID文章的所有归档")
+    @ApiImplicitParam(name = "aid", value = "将要获取的归档的所属文章的ID", required = true, dataType = "Int")
+    public JsonResponse selectArchiveByArticleId(@PathVariable(value = "aid") Integer aid) {
+        List<Archive> resultArchives = archiveService.getArchivesByAid(aid);
+        int resultLength = resultArchives.size();
+        if (resultLength > 0) {
+            return new JsonResponse(200, "Get archives by aid successfully", resultLength, resultArchives);
+        } else {
+            return new JsonResponse(404, "Get no archive", 0, null);
+        }
+    }
+    // TODO 添加某一AID文章到某一ArchiveID归档 （可选）
+
     // 创建新的归档
     @PostMapping(path = "/")
     @ApiOperation("创建新的归档")
