@@ -2,7 +2,9 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.JsonResponse;
+import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
 import com.rankofmatrix.blog.service.impl.ArticleAPIServiceImpl;
+import com.rankofmatrix.blog.service.impl.TagServiceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,22 @@ import java.util.List;
 public class ArticleController {
 
     private ArticleAPIServiceImpl articleAPIService;
+    private TagServiceImpl tagService;
+    private ArchiveServiceImpl archiveService;
 
     @Autowired
     public void setArticleAPIService(ArticleAPIServiceImpl articleAPIService) {
         this.articleAPIService = articleAPIService;
+    }
+
+    @Autowired
+    public void setTagService(TagServiceImpl tagService) {
+        this.tagService = tagService;
+    }
+
+    @Autowired
+    public void setArchiveService(ArchiveServiceImpl archiveService) {
+        this.archiveService = archiveService;
     }
 
     // 获取所有文章(包含被删除)
@@ -118,9 +132,32 @@ public class ArticleController {
         }
     }
 
-    // TODO 查看含有某一标签的所有文章
-
-    // TODO 查看某一归档内的所有文章
+    // 查看含有某一标签名标签的所有文章
+    @GetMapping(path = "/tag/{tagName}")
+    @ApiOperation("查看含有某一标签名标签的所有文章")
+    @ApiImplicitParam(name = "tagName", value = "标签名", required = true, dataType = "String")
+    public JsonResponse selectArticlesByTagName(@PathVariable(value = "tagName") String tagName) {
+        Integer tagId = tagService.getTagByTagName(tagName).getTagId();
+        List<Article> resultArticles = articleAPIService.getArticleWithoutTextByTagID(tagId);
+        if (resultArticles.size() > 0) {
+            return new JsonResponse(200, "Get the tag's all articles successfully", resultArticles.size(), resultArticles);
+        } else {
+            return new JsonResponse(404, "Tag has no article", 0, null);
+        }
+    }
+    // 查看某一归档名归档内的所有文章
+    @GetMapping(path = "/archive/{archiveName}")
+    @ApiOperation("查看某一归档名归档内的所有文章")
+    @ApiImplicitParam(name = "archiveName", value = "归档名", required = true, dataType = "String")
+    public JsonResponse selectArticlesByArchiveName(@PathVariable(value = "archiveName")String archiveName) {
+        Integer archiveId = archiveService.getArchiveByArchiveName(archiveName).getArchiveId();
+        List<Article> resultArticles = articleAPIService.getArticleWithoutTextByArchiveID(archiveId);
+        if (resultArticles.size() > 0) {
+            return new JsonResponse(200, "Get the archive's all articles successfully", resultArticles.size(), resultArticles);
+        } else {
+            return new JsonResponse(404, "Archive has no article", 0, null);
+        }
+    }
 
     // 创建新的文章
     @PostMapping(path = "/")
