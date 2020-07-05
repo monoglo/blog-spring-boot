@@ -58,7 +58,11 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public List<Article> getArticleWithoutTextByUid(Integer uid) {
-        return articleRepository.findArticlesByAuthorIdAndStatus(uid, 0);
+        List<Article> resultArticles = articleRepository.findArticlesByAuthorIdAndStatus(uid, 0);
+        for (Article article : resultArticles) {
+            article.setText(null);
+        }
+        return resultArticles;
     }
 
     @Override
@@ -72,6 +76,9 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
             Integer articleId = tagAndArticle.getArticleId();
             resultArticles.add(articleRepository.findArticleByAid(articleId));
         }
+        for (Article article : resultArticles) {
+            article.setText(null);
+        }
         return resultArticles;
     }
 
@@ -83,12 +90,19 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
             Integer articleId = archiveAndArticle.getArticleId();
             resultArticles.add(articleRepository.findArticleByAid(articleId));
         }
+        for (Article article : resultArticles) {
+            article.setText(null);
+        }
         return resultArticles;
     }
 
     @Override
     public List<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
-        return articleRepository.findArticlesByTitleContainsAndStatus(titleKey, 0);
+        List<Article> resultArticles = articleRepository.findArticlesByTitleContainsAndStatus(titleKey, 0);
+        for (Article article : resultArticles) {
+            article.setText(null);
+        }
+        return resultArticles;
     }
 
     @Override

@@ -90,7 +90,7 @@ public class ArticleController {
         }
     }
 
-    // 获取某一作者的所有文章 TODO (不带正文)
+    // 获取某一作者的所有文章
     @GetMapping(path = "/uid/{uid}")
     @ApiOperation("获取某一作者的所有文章(不带正文)")
     @ApiImplicitParam(name = "uid", value = "作者ID", required = true, dataType = "Int")
@@ -104,7 +104,7 @@ public class ArticleController {
         }
     }
 
-    // 检索标题中包含关键字的所有文章 TODO (不带正文)
+    // 检索标题中包含关键字的所有文章
     @GetMapping(path = "/titleKey/{titleKey}")
     @ApiOperation("检索标题中包含关键字的所有文章(不带正文)")
     @ApiImplicitParam(name = "titleKey", value = "标题检索关键词", required = true, dataType = "String")
@@ -134,27 +134,35 @@ public class ArticleController {
 
     // 查看含有某一标签名标签的所有文章
     @GetMapping(path = "/tag/{tagName}")
-    @ApiOperation("查看含有某一标签名标签的所有文章")
+    @ApiOperation("查看含有某一标签名标签的所有文章(不带正文)")
     @ApiImplicitParam(name = "tagName", value = "标签名", required = true, dataType = "String")
     public JsonResponse selectArticlesByTagName(@PathVariable(value = "tagName") String tagName) {
-        Integer tagId = tagService.getTagByTagName(tagName).getTagId();
-        List<Article> resultArticles = articleAPIService.getArticleWithoutTextByTagID(tagId);
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Get the tag's all articles successfully", resultArticles.size(), resultArticles);
-        } else {
+        try {
+            Integer tagId = tagService.getTagByTagName(tagName).getTagId();
+            List<Article> resultArticles = articleAPIService.getArticleWithoutTextByTagID(tagId);
+            if (resultArticles.size() > 0) {
+                return new JsonResponse(200, "Get the tag's all articles successfully", resultArticles.size(), resultArticles);
+            } else {
+                return new JsonResponse(404, "Tag has no article", 0, null);
+            }
+        } catch (NullPointerException nullPointerException) {
             return new JsonResponse(404, "Tag has no article", 0, null);
         }
     }
     // 查看某一归档名归档内的所有文章
     @GetMapping(path = "/archive/{archiveName}")
-    @ApiOperation("查看某一归档名归档内的所有文章")
+    @ApiOperation("查看某一归档名归档内的所有文章(不带正文)")
     @ApiImplicitParam(name = "archiveName", value = "归档名", required = true, dataType = "String")
     public JsonResponse selectArticlesByArchiveName(@PathVariable(value = "archiveName")String archiveName) {
-        Integer archiveId = archiveService.getArchiveByArchiveName(archiveName).getArchiveId();
-        List<Article> resultArticles = articleAPIService.getArticleWithoutTextByArchiveID(archiveId);
-        if (resultArticles.size() > 0) {
-            return new JsonResponse(200, "Get the archive's all articles successfully", resultArticles.size(), resultArticles);
-        } else {
+        try {
+            Integer archiveId = archiveService.getArchiveByArchiveName(archiveName).getArchiveId();
+            List<Article> resultArticles = articleAPIService.getArticleWithoutTextByArchiveID(archiveId);
+            if (resultArticles.size() > 0) {
+                return new JsonResponse(200, "Get the archive's all articles successfully", resultArticles.size(), resultArticles);
+            } else {
+                return new JsonResponse(404, "Archive has no article", 0, null);
+            }
+        } catch (NullPointerException nullPointerException) {
             return new JsonResponse(404, "Archive has no article", 0, null);
         }
     }
