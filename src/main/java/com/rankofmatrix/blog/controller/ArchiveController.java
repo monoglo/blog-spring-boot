@@ -91,7 +91,6 @@ public class ArchiveController {
             return new JsonResponse(404, "Get no archive", 0, null);
         }
     }
-    // TODO 添加某一AID文章到某一ArchiveID归档 （可选）
 
     // 创建新的归档
     @PostMapping(path = "/")
