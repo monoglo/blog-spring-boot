@@ -25,8 +25,8 @@ public interface ArticleAPIService {
 
     // 检索标题中包含关键字的所有文章(不带正文)
     List<Article> selectArticleWithoutTextByTitleKey(String titleKey);
-    // 检索模糊搜索带有关键字的所有文章(不带正文)
-    List<Article> selectArticleWithoutTextByKey(String Key);
+    // 检索模糊搜索带有关键字的所有文章
+    List<Article> selectArticleByKey(String Key);
 
     // 创建新的文章
     Article createArticleByArticle(Article newArticle);

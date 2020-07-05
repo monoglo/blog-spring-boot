@@ -106,7 +106,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public List<Article> selectArticleWithoutTextByKey(String key) {
+    public List<Article> selectArticleByKey(String key) {
         return articleRepository.findArticlesByStatusAndTitleContainsOrStatusAndTextContains(0, key, 0, key);
     }
 

@@ -118,12 +118,12 @@ public class ArticleController {
         }
     }
 
-    // 检索模糊搜索带有关键字的所有文章 TODO (不带正文)
+    // 检索模糊搜索带有关键字的所有文章
     @GetMapping(path = "/key/{key}")
-    @ApiOperation("检索模糊搜索带有关键字的所有文章(不带正文)")
+    @ApiOperation("检索模糊搜索带有关键字的所有文章")
     @ApiImplicitParam(name = "key", value = "全文检索关键词", required = true, dataType = "String")
     public JsonResponse selectArticleWithoutTextByKey(@PathVariable(value = "key") String key) {
-        List<Article> resultArticles = articleAPIService.selectArticleWithoutTextByKey(key);
+        List<Article> resultArticles = articleAPIService.selectArticleByKey(key);
         int resultLength = resultArticles.size();
         if (resultLength > 0) {
             return new JsonResponse(200, "Search articles successfully", resultLength, resultArticles);
