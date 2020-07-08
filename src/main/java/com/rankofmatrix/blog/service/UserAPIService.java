@@ -11,4 +11,7 @@ public interface UserAPIService {
     User registerUser(User registerUser);
     // 用户登录
     User loginUser(User loginUser);
+
+    // 用户信息是否可以进行登陆
+    Boolean isLoginUserLegal(User checkedUser);
 }

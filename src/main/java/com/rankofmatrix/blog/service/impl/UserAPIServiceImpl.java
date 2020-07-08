@@ -8,6 +8,7 @@ import com.rankofmatrix.blog.service.UserAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -35,9 +36,11 @@ public class UserAPIServiceImpl implements UserAPIService{
     public User registerUser(User registerUser) {
         if (userRepository.findByEmail(registerUser.getEmail()) == null) {
             User checkedUser = new User();
+            // 为避免用户自行设置生成信息，进行过滤
             checkedUser.setEmail(registerUser.getEmail());
             checkedUser.setPassword(encryptor.encrypt(registerUser.getPassword()));
             checkedUser.setNickname(registerUser.getNickname());
+            checkedUser.setAvatarUrl(registerUser.getAvatarUrl());
             return userRepository.save(checkedUser);
         } else {
             return null;
@@ -50,13 +53,19 @@ public class UserAPIServiceImpl implements UserAPIService{
         checkedUser =  userRepository.findByEmail(loginUser.getEmail());
         if (checkedUser != null) {
             if (encryptor.decrypt(checkedUser.getPassword()).equals(loginUser.getPassword())) {
-                return checkedUser;
+                checkedUser.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
+                return userRepository.save(checkedUser);
             } else {
                 return null;
             }
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Boolean isLoginUserLegal(User checkedUser) {
+        return checkedUser.getEmail() != null && checkedUser.getPassword() != null;
     }
 
 }

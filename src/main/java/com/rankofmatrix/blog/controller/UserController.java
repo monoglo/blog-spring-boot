@@ -28,11 +28,15 @@ public class UserController {
     @ApiImplicitParam(name = "registerUser", value = "将要注册的用户信息（邮箱、密码必要）", required = true, dataType = "User")
     @PostMapping(path = "/register")
     public JsonResponse registerUser (@RequestBody User registerUser) {
-        User resultUser = userAPIService.registerUser(registerUser);
-        if (resultUser != null) {
-            return new JsonResponse(201, "Register successfully", 1, resultUser);
+        if (userAPIService.isLoginUserLegal(registerUser)) {
+            User resultUser = userAPIService.registerUser(registerUser);
+            if (resultUser != null) {
+                return new JsonResponse(201, "Register successfully", 1, resultUser);
+            } else {
+                return new JsonResponse(409, "Error: Email exists", 0, null);
+            }
         } else {
-            return new JsonResponse(409, "Error: Email exists", 0, null);
+            return new JsonResponse(403, "Error: Must give email and password", 0, null);
         }
     }
 
