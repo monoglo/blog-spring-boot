@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -112,7 +113,12 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public Article createArticleByArticle(Article newArticle) {
-        return articleRepository.save(newArticle);
+        // 过滤
+        Article checkedArticle = new Article();
+        checkedArticle.setTitle(newArticle.getTitle());
+        checkedArticle.setText(newArticle.getText());
+        checkedArticle.setAuthorId(newArticle.getAuthorId());
+        return articleRepository.save(checkedArticle);
     }
 
     @Override
@@ -126,11 +132,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         newTagAndArticle.setArticleId(aid);
         newTagAndArticle.setTagId(tagId);
         tagAndArticleRepository.save(newTagAndArticle);
-        if (newTagAndArticle.getTagArticleId() != null) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
+        return newTagAndArticle.getTagArticleId() != null;
     }
 
     @Override
@@ -139,11 +141,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         newArchiveAndArticle.setArticleId(aid);
         newArchiveAndArticle.setArchiveId(archiveId);
         archiveAndArticleRepository.save(newArchiveAndArticle);
-        if (newArchiveAndArticle.getArchiveArticleId() != null) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
+        return newArchiveAndArticle.getArchiveArticleId() != null;
     }
 
 
@@ -157,5 +155,10 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         } else {
             return Boolean.FALSE;
         }
+    }
+
+    @Override
+    public Boolean isInputArticleLegal(Article article) {
+        return article.getTitle() != null && article.getAuthorId() !=null;
     }
 }

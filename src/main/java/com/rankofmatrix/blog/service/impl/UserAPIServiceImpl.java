@@ -64,6 +64,11 @@ public class UserAPIServiceImpl implements UserAPIService{
     }
 
     @Override
+    public User findUserByUid(Integer uid) {
+        return userRepository.findByUid(uid);
+    }
+
+    @Override
     public Boolean isLoginUserLegal(User checkedUser) {
         return checkedUser.getEmail() != null && checkedUser.getPassword() != null;
     }

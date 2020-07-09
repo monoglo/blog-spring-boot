@@ -11,7 +11,8 @@ public interface UserAPIService {
     User registerUser(User registerUser);
     // 用户登录
     User loginUser(User loginUser);
-
+    // 获取某一指定UID的用户
+    User findUserByUid(Integer uid);
     // 用户信息是否可以进行登陆
     Boolean isLoginUserLegal(User checkedUser);
 }

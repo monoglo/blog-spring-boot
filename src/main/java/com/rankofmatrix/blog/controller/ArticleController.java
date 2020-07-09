@@ -5,6 +5,7 @@ import com.rankofmatrix.blog.model.JsonResponse;
 import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
 import com.rankofmatrix.blog.service.impl.ArticleAPIServiceImpl;
 import com.rankofmatrix.blog.service.impl.TagServiceImpl;
+import com.rankofmatrix.blog.service.impl.UserAPIServiceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class ArticleController {
     private ArticleAPIServiceImpl articleAPIService;
     private TagServiceImpl tagService;
     private ArchiveServiceImpl archiveService;
+    private UserAPIServiceImpl userAPIService;
 
     @Autowired
     public void setArticleAPIService(ArticleAPIServiceImpl articleAPIService) {
@@ -36,6 +38,11 @@ public class ArticleController {
     @Autowired
     public void setArchiveService(ArchiveServiceImpl archiveService) {
         this.archiveService = archiveService;
+    }
+
+    @Autowired
+    public void setUserAPIService(UserAPIServiceImpl userAPIService) {
+        this.userAPIService = userAPIService;
     }
 
     // 获取所有文章(包含被删除)
@@ -172,11 +179,20 @@ public class ArticleController {
     @ApiOperation("创建新的文章")
     @ApiImplicitParam(name = "createArticle", value = "将要创建的文章信息(标题必要)", required = true, dataType = "Article")
     public JsonResponse createArticleByArticle(@RequestBody Article createArticle) {
-        Article createdArticle = articleAPIService.createArticleByArticle(createArticle);
-        if (createdArticle != null) {
-            return new JsonResponse(201, "Create article successfully", 1, createdArticle);
+        if (articleAPIService.isInputArticleLegal(createArticle)) {
+            if (userAPIService.findUserByUid(createArticle.getAuthorId()) != null) {
+                Article createdArticle = articleAPIService.createArticleByArticle(createArticle);
+                if (createdArticle != null) {
+                    return new JsonResponse(201, "Create article successfully", 1, createdArticle);
+                } else {
+                    return new JsonResponse(403, "Create article Failed", 0, null);
+                }
+            } else {
+                return new JsonResponse(403, "Author does not exit", 0, null);
+            }
+
         } else {
-            return new JsonResponse(403, "Create article Failed", 0, null);
+            return new JsonResponse(403, "Title and author id shall be given", 0, null);
         }
     }
 
