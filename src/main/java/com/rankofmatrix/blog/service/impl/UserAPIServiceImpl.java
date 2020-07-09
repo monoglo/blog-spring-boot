@@ -1,5 +1,6 @@
 package com.rankofmatrix.blog.service.impl;
 
+import com.rankofmatrix.blog.exception.UserDoesNotExistException;
 import org.jasypt.encryption.StringEncryptor;
 import com.google.common.collect.Lists;
 import com.rankofmatrix.blog.model.User;
@@ -64,8 +65,13 @@ public class UserAPIServiceImpl implements UserAPIService{
     }
 
     @Override
-    public User findUserByUid(Integer uid) {
-        return userRepository.findByUid(uid);
+    public User findUserByUid(Integer uid) throws UserDoesNotExistException{
+        User resultUser = userRepository.findByUid(uid);
+        if (resultUser != null) {
+            return resultUser;
+        } else {
+            throw new UserDoesNotExistException();
+        }
     }
 
     @Override

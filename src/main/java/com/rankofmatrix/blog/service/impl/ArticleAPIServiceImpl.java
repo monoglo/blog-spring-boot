@@ -1,5 +1,6 @@
 package com.rankofmatrix.blog.service.impl;
 
+import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
 import com.rankofmatrix.blog.model.ArchiveAndArticle;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.TagAndArticle;
@@ -53,8 +54,14 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public Article getArticleByAid(Integer aid) {
-        return articleRepository.findArticleByAid(aid);
+    public Article getArticleByAid(Integer aid) throws ArticleDoesNotExistException {
+        Article article = articleRepository.findArticleByAid(aid);
+        if (article != null) {
+            return articleRepository.findArticleByAid(aid);
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
+
     }
 
     @Override
@@ -123,7 +130,10 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public Article modifyArticleByArticle(Article modifiedArticle) {
-        return articleRepository.save(modifiedArticle);
+        Article checkedArticle = articleRepository.findArticleByAid(modifiedArticle.getAid());
+        checkedArticle.setText(modifiedArticle.getText());
+        checkedArticle.setLastEditTime(new Timestamp(System.currentTimeMillis()));
+        return articleRepository.save(checkedArticle);
     }
 
     @Override
@@ -158,7 +168,20 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public Boolean isInputArticleLegal(Article article) {
-        return article.getTitle() != null && article.getAuthorId() !=null;
+    public Boolean hasArticleTitleAndAuthorId(Article article) throws IllegalArgumentException {
+        if (article.getTitle() != null && article.getAuthorId() != null) {
+            return Boolean.TRUE;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public Boolean hasArticleTitleAndTextAndAid(Article article) throws IllegalArgumentException {
+        if (article.getText() != null && article.getAid() != null && article.getTitle() != null) {
+            return Boolean.TRUE;
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 }

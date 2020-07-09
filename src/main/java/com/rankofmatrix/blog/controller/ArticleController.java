@@ -1,5 +1,7 @@
 package com.rankofmatrix.blog.controller;
 
+import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
+import com.rankofmatrix.blog.exception.UserDoesNotExistException;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.JsonResponse;
 import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
@@ -89,12 +91,15 @@ public class ArticleController {
     @ApiOperation("获取某一ID的文章(包含被删除)")
     @ApiImplicitParam(name = "aid", value = "文章ID", required = true, dataType = "Int")
     public JsonResponse getArticleByAid(@PathVariable(value = "aid") Integer aid) {
-        Article resultArticle = articleAPIService.getArticleByAid(aid);
-        if (resultArticle != null) {
+        try {
+            Article resultArticle = articleAPIService.getArticleByAid(aid);
             return new JsonResponse(200, "Get article successfully", 1, resultArticle);
-        } else {
-            return new JsonResponse(404, "Article not found", 0, null);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
+
     }
 
     // 获取某一作者的所有文章
@@ -147,13 +152,11 @@ public class ArticleController {
         try {
             Integer tagId = tagService.getTagByTagName(tagName).getTagId();
             List<Article> resultArticles = articleAPIService.getArticleWithoutTextByTagID(tagId);
-            if (resultArticles.size() > 0) {
-                return new JsonResponse(200, "Get the tag's all articles successfully", resultArticles.size(), resultArticles);
-            } else {
-                return new JsonResponse(404, "Tag has no article", 0, null);
-            }
+            return new JsonResponse(200, "Get the tag's all articles successfully", resultArticles.size(), resultArticles);
         } catch (NullPointerException nullPointerException) {
             return new JsonResponse(404, "Tag has no article", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
     // 查看某一归档名归档内的所有文章
@@ -164,13 +167,11 @@ public class ArticleController {
         try {
             Integer archiveId = archiveService.getArchiveByArchiveName(archiveName).getArchiveId();
             List<Article> resultArticles = articleAPIService.getArticleWithoutTextByArchiveID(archiveId);
-            if (resultArticles.size() > 0) {
-                return new JsonResponse(200, "Get the archive's all articles successfully", resultArticles.size(), resultArticles);
-            } else {
-                return new JsonResponse(404, "Archive has no article", 0, null);
-            }
+            return new JsonResponse(200, "Get the archive's all articles successfully", resultArticles.size(), resultArticles);
         } catch (NullPointerException nullPointerException) {
             return new JsonResponse(404, "Archive has no article", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
 
@@ -179,20 +180,17 @@ public class ArticleController {
     @ApiOperation("创建新的文章")
     @ApiImplicitParam(name = "createArticle", value = "将要创建的文章信息(标题必要)", required = true, dataType = "Article")
     public JsonResponse createArticleByArticle(@RequestBody Article createArticle) {
-        if (articleAPIService.isInputArticleLegal(createArticle)) {
-            if (userAPIService.findUserByUid(createArticle.getAuthorId()) != null) {
-                Article createdArticle = articleAPIService.createArticleByArticle(createArticle);
-                if (createdArticle != null) {
-                    return new JsonResponse(201, "Create article successfully", 1, createdArticle);
-                } else {
-                    return new JsonResponse(403, "Create article Failed", 0, null);
-                }
-            } else {
-                return new JsonResponse(403, "Author does not exit", 0, null);
-            }
-
-        } else {
+        try {
+            articleAPIService.hasArticleTitleAndAuthorId(createArticle);
+            userAPIService.findUserByUid(createArticle.getAuthorId());
+            Article createdArticle = articleAPIService.createArticleByArticle(createArticle);
+            return new JsonResponse(201, "Create article successfully", 1, createdArticle);
+        } catch (UserDoesNotExistException e) {
+            return new JsonResponse(403, "Author does not exit", 0, null);
+        } catch (IllegalArgumentException e) {
             return new JsonResponse(403, "Title and author id shall be given", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
 
@@ -201,11 +199,17 @@ public class ArticleController {
     @ApiOperation("修改文章(包含被删除)")
     @ApiImplicitParam(name = "updateArticle", value = "将要修改的文章信息", required = true, dataType = "Article")
     public JsonResponse modifyArticleByArticle(@RequestBody Article updateArticle) {
-        Article modifiedArticle = articleAPIService.modifyArticleByArticle(updateArticle);
-        if (modifiedArticle != null) {
+        try {
+            articleAPIService.hasArticleTitleAndTextAndAid(updateArticle);
+            articleAPIService.getArticleByAid(updateArticle.getAid());
+            Article modifiedArticle = articleAPIService.modifyArticleByArticle(updateArticle);
             return new JsonResponse(200, "Update article successfully", 1, modifiedArticle);
-        } else {
-            return new JsonResponse(403, "Update article Failed", 0, null);
+        } catch (IllegalArgumentException e) {
+            return new JsonResponse(403, "Aid, title and text shall be given", 0, null);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
 

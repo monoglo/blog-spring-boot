@@ -41,7 +41,9 @@ public interface ArticleAPIService {
     // 删除某一ID的文章
     Boolean deleteArticleByAid(Integer aid);
 
-    // 判断输入的Article是否含有必要元素
-    Boolean isInputArticleLegal(Article article);
+    // 判断输入的Article是否含有标题和作者UID
+    Boolean hasArticleTitleAndAuthorId(Article article);
+
+    Boolean hasArticleTitleAndTextAndAid(Article article);
 
 }
