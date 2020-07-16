@@ -1,6 +1,7 @@
 package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
+import com.rankofmatrix.blog.exception.ArticleIsHiddenException;
 import com.rankofmatrix.blog.exception.UserDoesNotExistException;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.JsonResponse;
@@ -255,6 +256,43 @@ public class ArticleController {
             return new JsonResponse(200, "Delete article successfully", 0, null);
         } else {
             return new JsonResponse(403, "Delete article Failed, article may not exists", 0, null);
+        }
+    }
+
+    // 增加文章阅读量
+    @ApiOperation("增加文章阅读量")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "aid", value = "被提升阅读量的文章ID",required = true, dataType = "Int"),
+            @ApiImplicitParam(name = "amount", value = "提升阅读量数值", required = true, dataType = "Int")
+    })
+    @PostMapping(path = "/aid/{aid}/add/clickAmount/value/{amount}")
+    public JsonResponse increaseArticleClickAmountByAidAndAmount(@PathVariable Integer aid, @PathVariable Integer amount) {
+        try {
+            Integer resultClickAmount = articleAPIService.increaseArticleClickAmount(aid, amount);
+            return new JsonResponse(200, "Increase click amount successfully", 1, resultClickAmount);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (ArticleIsHiddenException e) {
+            return new JsonResponse(403, "Article is hidden", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
+        }
+    }
+
+    // 在阅读文章后增加文章阅读量
+    @ApiOperation("在阅读文章后增加文章阅读量")
+    @ApiImplicitParam(name = "aid", value = "被阅读的文章ID",required = true, dataType = "Int")
+    @PostMapping(path = "/aid/{aid}/read")
+    public JsonResponse increaseArticleClickAmountByAidRead(@PathVariable Integer aid) {
+        try {
+            Integer resultClickAmount = articleAPIService.increaseArticleClickAmount(aid);
+            return new JsonResponse(200, "Read article successfully", 1, resultClickAmount);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (ArticleIsHiddenException e) {
+            return new JsonResponse(403, "Article is hidden", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
 

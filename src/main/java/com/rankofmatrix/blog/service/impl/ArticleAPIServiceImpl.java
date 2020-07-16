@@ -1,6 +1,7 @@
 package com.rankofmatrix.blog.service.impl;
 
 import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
+import com.rankofmatrix.blog.exception.ArticleIsHiddenException;
 import com.rankofmatrix.blog.model.ArchiveAndArticle;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.TagAndArticle;
@@ -184,4 +185,37 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
             throw new IllegalArgumentException();
         }
     }
+
+    @Override
+    public Integer increaseArticleClickAmount(Integer aid, Integer increaseAmount) throws ArticleDoesNotExistException, ArticleIsHiddenException {
+        Article article = articleRepository.findArticleByAid(aid);
+        if (article != null) {
+            if (article.getStatus() == 0) {
+                article.setClickAmount(article.getClickAmount() + increaseAmount);
+                articleRepository.save(article);
+                return article.getClickAmount();
+            } else {
+                throw new ArticleIsHiddenException();
+            }
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
+    }
+
+    @Override
+    public Integer increaseArticleClickAmount(Integer aid) throws ArticleDoesNotExistException, ArticleIsHiddenException {
+        Article article = articleRepository.findArticleByAid(aid);
+        if (article != null) {
+            if (article.getStatus() == 0) {
+                article.setClickAmount(article.getClickAmount() + 1);
+                articleRepository.save(article);
+                return article.getClickAmount();
+            } else {
+                throw new ArticleIsHiddenException();
+            }
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
+    }
+
 }

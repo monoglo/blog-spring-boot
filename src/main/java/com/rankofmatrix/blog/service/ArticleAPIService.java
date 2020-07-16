@@ -46,4 +46,7 @@ public interface ArticleAPIService {
 
     Boolean hasArticleTitleAndTextAndAid(Article article);
 
+    Integer increaseArticleClickAmount(Integer aid, Integer increaseAmount);
+
+    Integer increaseArticleClickAmount(Integer aid);
 }
