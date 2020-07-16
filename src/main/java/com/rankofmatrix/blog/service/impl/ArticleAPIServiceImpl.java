@@ -157,14 +157,18 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
 
     @Override
-    public Boolean deleteArticleByAid(Integer aid) {
-        Article deleted_article = articleRepository.findArticleByAid(aid);
-        if (deleted_article.getStatus() == 0) {
-            deleted_article.setStatus(1);
-            articleRepository.save(deleted_article);
-            return Boolean.TRUE;
+    public Boolean deleteArticleByAid(Integer aid) throws ArticleDoesNotExistException, ArticleIsHiddenException{
+        Article deletedArticle = articleRepository.findArticleByAid(aid);
+        if (deletedArticle != null) {
+            if (deletedArticle.getStatus() == 0) {
+                deletedArticle.setStatus(1);
+                articleRepository.save(deletedArticle);
+                return Boolean.TRUE;
+            } else {
+                throw new ArticleIsHiddenException();
+            }
         } else {
-            return Boolean.FALSE;
+            throw new ArticleDoesNotExistException();
         }
     }
 

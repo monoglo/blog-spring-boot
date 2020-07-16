@@ -251,11 +251,15 @@ public class ArticleController {
     @ApiImplicitParam(name = "aid", value = "将要删除的文章ID", required = true, dataType = "Int")
     @DeleteMapping(path = "/aid/{aid}")
     public JsonResponse deleteArticleByAid(@PathVariable(value = "aid") Integer aid) {
-        Boolean result = articleAPIService.deleteArticleByAid(aid);
-        if (result) {
-            return new JsonResponse(200, "Delete article successfully", 0, null);
-        } else {
-            return new JsonResponse(403, "Delete article Failed, article may not exists", 0, null);
+        try {
+            articleAPIService.deleteArticleByAid(aid);
+            return new JsonResponse(200, "Delete article successfully", 1, aid);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Delete article Failed, article may not exists", 0, null);
+        } catch (ArticleIsHiddenException e) {
+            return new JsonResponse(403, "Article is hidden", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
 
