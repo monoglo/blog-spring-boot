@@ -1,8 +1,6 @@
 package com.rankofmatrix.blog.controller;
 
-import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
-import com.rankofmatrix.blog.exception.ArticleIsHiddenException;
-import com.rankofmatrix.blog.exception.UserDoesNotExistException;
+import com.rankofmatrix.blog.exception.*;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.JsonResponse;
 import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
@@ -202,7 +200,6 @@ public class ArticleController {
     public JsonResponse modifyArticleByArticle(@RequestBody Article updateArticle) {
         try {
             articleAPIService.hasArticleTitleAndTextAndAid(updateArticle);
-            articleAPIService.getArticleByAid(updateArticle.getAid());
             Article modifiedArticle = articleAPIService.modifyArticleByArticle(updateArticle);
             return new JsonResponse(200, "Update article successfully", 1, modifiedArticle);
         } catch (IllegalArgumentException e) {
@@ -222,14 +219,18 @@ public class ArticleController {
             @ApiImplicitParam(name = "tagId", value = "标签的ID", required = true, dataType = "int")
     })
     public JsonResponse addTagToArticleByAidAndTagId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "tagId") Integer tagId) {
-        Boolean result = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
-        if (result) {
-            return new JsonResponse(200, "Add Tag successfully", 0, null);
-        } else {
-            return new JsonResponse(403, "Add Tag Failed", 0, null);
+        try {
+            Integer articleAmount = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
+            return new JsonResponse(200, "Add Tag successfully", 1, articleAmount);
+        } catch (ArticleDoesNotExistException e){
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (TagDoesNotExistException e) {
+            return new JsonResponse(403, "Tag does not exist", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
-
+    // TODO 移除归档、标签关系
     // 添加某一ID归档到某一ID文章
     @PutMapping(path = "aid/{aid}/add/archive/{archiveId}")
     @ApiOperation("添加某一ID归档到某一ID文章")
@@ -238,11 +239,15 @@ public class ArticleController {
             @ApiImplicitParam(name = "archiveId", value = "归档的ID", required = true, dataType = "int")
     })
     public JsonResponse addArchiveToArticleByAidAndArchiveId(@PathVariable(value = "aid")Integer aid, @PathVariable(value = "archiveId") Integer archiveId)  {
-        Boolean result = articleAPIService.addArchiveToArticleByAidAndArchiveId(aid, archiveId);
-        if (result) {
-            return new JsonResponse(200, "Add Archive successfully", 0, null);
-        } else {
-            return new JsonResponse(403, "Add Archive failed", 0, null);
+        try {
+            Integer articleAmount = articleAPIService.addArchiveToArticleByAidAndArchiveId(aid, archiveId);
+            return new JsonResponse(200, "Add Archive successfully", 1, articleAmount);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (ArchvieDoesNotExistException e) {
+            return new JsonResponse(403, "Archive does not exist", 0, null);
+        } catch (Exception e) {
+            return new JsonResponse(100, e.toString(), 0, null);
         }
     }
 

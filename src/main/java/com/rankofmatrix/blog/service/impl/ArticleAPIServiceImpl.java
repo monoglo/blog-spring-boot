@@ -1,13 +1,11 @@
 package com.rankofmatrix.blog.service.impl;
 
+import com.rankofmatrix.blog.exception.ArchvieDoesNotExistException;
 import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
 import com.rankofmatrix.blog.exception.ArticleIsHiddenException;
-import com.rankofmatrix.blog.model.ArchiveAndArticle;
-import com.rankofmatrix.blog.model.Article;
-import com.rankofmatrix.blog.model.TagAndArticle;
-import com.rankofmatrix.blog.repository.ArchiveAndArticleRepository;
-import com.rankofmatrix.blog.repository.ArticleRepository;
-import com.rankofmatrix.blog.repository.TagAndArticleRepository;
+import com.rankofmatrix.blog.exception.TagDoesNotExistException;
+import com.rankofmatrix.blog.model.*;
+import com.rankofmatrix.blog.repository.*;
 import com.rankofmatrix.blog.service.ArticleAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,8 @@ import java.util.List;
 public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     private ArticleRepository articleRepository;
+    private ArchiveRepository archiveRepository;
+    private TagRepository tagRepository;
     private TagAndArticleRepository tagAndArticleRepository;
     private ArchiveAndArticleRepository archiveAndArticleRepository;
 
@@ -30,12 +30,22 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Autowired
+    public void setArchiveRepository(ArchiveRepository archiveRepository) {
+        this.archiveRepository = archiveRepository;
+    }
+
+    @Autowired
+    public void setTagRepository(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
+
+    @Autowired
     public void setTagAndArticleRepository(TagAndArticleRepository tagAndArticleRepository) {
         this.tagAndArticleRepository = tagAndArticleRepository;
     }
 
     @Autowired
-    public void setArchiveAndArticle(ArchiveAndArticleRepository archiveAndArticleRepository) {
+    public void setArchiveAndArticleRepository(ArchiveAndArticleRepository archiveAndArticleRepository) {
         this.archiveAndArticleRepository = archiveAndArticleRepository;
     }
 
@@ -130,29 +140,56 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public Article modifyArticleByArticle(Article modifiedArticle) {
+    public Article modifyArticleByArticle(Article modifiedArticle) throws ArticleDoesNotExistException {
         Article checkedArticle = articleRepository.findArticleByAid(modifiedArticle.getAid());
-        checkedArticle.setText(modifiedArticle.getText());
-        checkedArticle.setLastEditTime(new Timestamp(System.currentTimeMillis()));
-        return articleRepository.save(checkedArticle);
+        if (checkedArticle != null) {
+            checkedArticle.setTitle(modifiedArticle.getTitle());
+            checkedArticle.setText(modifiedArticle.getText());
+            checkedArticle.setLastEditTime(new Timestamp(System.currentTimeMillis()));
+            return articleRepository.save(checkedArticle);
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
     }
 
     @Override
-    public Boolean addTagToArticleByAidAndTagId(Integer aid, Integer tagId) {
-        TagAndArticle newTagAndArticle = new TagAndArticle();
-        newTagAndArticle.setArticleId(aid);
-        newTagAndArticle.setTagId(tagId);
-        tagAndArticleRepository.save(newTagAndArticle);
-        return newTagAndArticle.getTagArticleId() != null;
+    public Integer addTagToArticleByAidAndTagId(Integer aid, Integer tagId) {
+        if (articleRepository.findArticleByAid(aid) != null) {
+            Tag tag = tagRepository.findTagByTagId(tagId);
+            if (tag != null) {
+                TagAndArticle newTagAndArticle = new TagAndArticle();
+                newTagAndArticle.setArticleId(aid);
+                newTagAndArticle.setTagId(tagId);
+                tag.setArticleAmount(tag.getArticleAmount() + 1);
+                tagAndArticleRepository.save(newTagAndArticle);
+                tagRepository.save(tag);
+                return tag.getArticleAmount();
+            } else {
+                throw new TagDoesNotExistException();
+            }
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
     }
 
     @Override
-    public Boolean addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) {
-        ArchiveAndArticle newArchiveAndArticle = new ArchiveAndArticle();
-        newArchiveAndArticle.setArticleId(aid);
-        newArchiveAndArticle.setArchiveId(archiveId);
-        archiveAndArticleRepository.save(newArchiveAndArticle);
-        return newArchiveAndArticle.getArchiveArticleId() != null;
+    public Integer addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) throws ArticleDoesNotExistException, ArchvieDoesNotExistException{
+        if (articleRepository.findArticleByAid(aid) != null) {
+            Archive archive = archiveRepository.findArchiveByArchiveId(archiveId);
+            if (archive != null) {
+                ArchiveAndArticle newArchiveAndArticle = new ArchiveAndArticle();
+                newArchiveAndArticle.setArticleId(aid);
+                newArchiveAndArticle.setArchiveId(archiveId);
+                archive.setArticleAmount(archive.getArticleAmount() + 1);
+                archiveAndArticleRepository.save(newArchiveAndArticle);
+                archiveRepository.save(archive);
+                return archive.getArticleAmount();
+            } else {
+                throw new ArchvieDoesNotExistException();
+            }
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
     }
 
 
