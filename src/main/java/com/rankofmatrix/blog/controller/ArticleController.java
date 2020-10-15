@@ -2,7 +2,7 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.exception.*;
 import com.rankofmatrix.blog.model.Article;
-import com.rankofmatrix.blog.model.JsonResponse;
+import com.rankofmatrix.blog.model.dto.JsonResponse;
 import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
 import com.rankofmatrix.blog.service.impl.ArticleAPIServiceImpl;
 import com.rankofmatrix.blog.service.impl.TagServiceImpl;
@@ -179,6 +179,7 @@ public class ArticleController {
     @ApiOperation("创建新的文章")
     @ApiImplicitParam(name = "createArticle", value = "将要创建的文章信息(标题必要)", required = true, dataType = "Article")
     public JsonResponse createArticleByArticle(@RequestBody Article createArticle) {
+        System.out.println(createArticle);
         try {
             articleAPIService.hasArticleTitleAndAuthorId(createArticle);
             userAPIService.findUserByUid(createArticle.getAuthorId());

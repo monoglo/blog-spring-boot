@@ -1,4 +1,4 @@
-package com.rankofmatrix.blog.model;
+package com.rankofmatrix.blog.model.dto;
 
 public class JsonResponse {
     private Integer code;

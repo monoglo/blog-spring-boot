@@ -2,7 +2,7 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.service.impl.UserAPIServiceImpl;
 import com.rankofmatrix.blog.model.User;
-import com.rankofmatrix.blog.model.JsonResponse;
+import com.rankofmatrix.blog.model.dto.JsonResponse;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

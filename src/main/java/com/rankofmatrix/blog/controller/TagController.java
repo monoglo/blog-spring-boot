@@ -1,6 +1,6 @@
 package com.rankofmatrix.blog.controller;
 
-import com.rankofmatrix.blog.model.JsonResponse;
+import com.rankofmatrix.blog.model.dto.JsonResponse;
 import com.rankofmatrix.blog.model.Tag;
 import com.rankofmatrix.blog.service.impl.TagServiceImpl;
 import io.swagger.annotations.Api;

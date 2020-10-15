@@ -1,7 +1,7 @@
 package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.model.Archive;
-import com.rankofmatrix.blog.model.JsonResponse;
+import com.rankofmatrix.blog.model.dto.JsonResponse;
 import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
