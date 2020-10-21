@@ -2,6 +2,7 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.exception.*;
 import com.rankofmatrix.blog.model.Article;
+import com.rankofmatrix.blog.model.dto.ArticleResponse;
 import com.rankofmatrix.blog.model.dto.JsonResponse;
 import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
 import com.rankofmatrix.blog.service.impl.ArticleAPIServiceImpl;
@@ -11,6 +12,7 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -50,10 +52,10 @@ public class ArticleController {
     @GetMapping(path = "/")
     @ApiOperation("获取所有文章(包含被删除)")
     public JsonResponse getAllArticle() {
-        List<Article> resultArticles = articleAPIService.getAllArticle();
-        int resultLength = resultArticles.size();
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticle());
+        int resultLength = articleResponseList.size();
         if (resultLength > 0) {
-            return new JsonResponse(200, "Get all articles successfully", resultLength, resultArticles);
+            return new JsonResponse(200, "Get all articles successfully", resultLength, articleResponseList);
         } else {
             return new JsonResponse(404, "Get no article", 0, null);
         }
@@ -63,10 +65,10 @@ public class ArticleController {
     @GetMapping(path = "/visible")
     @ApiOperation("获取所有可见的文章")
     public JsonResponse getAllArticleVisible() {
-        List<Article> resultArticles = articleAPIService.getAllArticleVisible();
-        int resultLength = resultArticles.size();
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleVisible());
+        int resultLength = articleResponseList.size();
         if (resultLength > 0) {
-            return new JsonResponse(200, "Get all articles successfully", resultLength, resultArticles);
+            return new JsonResponse(200, "Get all articles successfully", resultLength, articleResponseList);
         } else {
             return new JsonResponse(404, "Get no article", 0, null);
         }
@@ -76,10 +78,10 @@ public class ArticleController {
     @GetMapping(path = "/deleted")
     @ApiOperation("获取所有被删除的文章")
     public JsonResponse getAllArticleDeleted() {
-        List<Article> resultArticles = articleAPIService.getAllArticleDeleted();
-        int resultLength = resultArticles.size();
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleDeleted());
+        int resultLength = articleResponseList.size();
         if (resultLength > 0) {
-            return new JsonResponse(200, "Get all articles successfully", resultLength, resultArticles);
+            return new JsonResponse(200, "Get all articles successfully", resultLength, articleResponseList);
         } else {
             return new JsonResponse(404, "Get no article", 0, null);
         }
@@ -106,10 +108,10 @@ public class ArticleController {
     @ApiOperation("获取某一作者的所有文章(不带正文)")
     @ApiImplicitParam(name = "uid", value = "作者ID", required = true, dataType = "Int")
     public JsonResponse getArticleWithoutTextByUid(@PathVariable(value = "uid") Integer uid) {
-        List<Article> resultArticles = articleAPIService.getArticleWithoutTextByUid(uid);
-        int resultLength = resultArticles.size();
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getArticleWithoutTextByUid(uid));
+        int resultLength = articleResponseList.size();
         if (resultLength > 0) {
-            return new JsonResponse(200, "Get author's all articles successfully", resultLength, resultArticles);
+            return new JsonResponse(200, "Get author's all articles successfully", resultLength, articleResponseList);
         } else {
             return new JsonResponse(404, "Author has no article", 0, null);
         }
@@ -120,10 +122,10 @@ public class ArticleController {
     @ApiOperation("检索标题中包含关键字的所有文章(不带正文)")
     @ApiImplicitParam(name = "titleKey", value = "标题检索关键词", required = true, dataType = "String")
     public JsonResponse selectArticleWithoutTextByTitleKey(@PathVariable(value = "titleKey") String titleKey) {
-        List<Article> resultArticles = articleAPIService.selectArticleWithoutTextByTitleKey(titleKey);
-        int resultLength = resultArticles.size();
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.selectArticleWithoutTextByTitleKey(titleKey));
+        int resultLength = articleResponseList.size();
         if (resultLength > 0) {
-            return new JsonResponse(200, "Search articles successfully", resultLength, resultArticles);
+            return new JsonResponse(200, "Search articles successfully", resultLength, articleResponseList);
         } else {
             return new JsonResponse(404, "Search has not found", 0, null);
         }
@@ -134,10 +136,10 @@ public class ArticleController {
     @ApiOperation("检索模糊搜索带有关键字的所有文章")
     @ApiImplicitParam(name = "key", value = "全文检索关键词", required = true, dataType = "String")
     public JsonResponse selectArticleWithoutTextByKey(@PathVariable(value = "key") String key) {
-        List<Article> resultArticles = articleAPIService.selectArticleByKey(key);
-        int resultLength = resultArticles.size();
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.selectArticleByKey(key));
+        int resultLength = articleResponseList.size();
         if (resultLength > 0) {
-            return new JsonResponse(200, "Search articles successfully", resultLength, resultArticles);
+            return new JsonResponse(200, "Search articles successfully", resultLength, articleResponseList);
         } else {
             return new JsonResponse(404, "Search has not found", 0, null);
         }
@@ -150,8 +152,8 @@ public class ArticleController {
     public JsonResponse selectArticlesByTagName(@PathVariable(value = "tagName") String tagName) {
         try {
             Integer tagId = tagService.getTagByTagName(tagName).getTagId();
-            List<Article> resultArticles = articleAPIService.getArticleWithoutTextByTagID(tagId);
-            return new JsonResponse(200, "Get the tag's all articles successfully", resultArticles.size(), resultArticles);
+            List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getArticleWithoutTextByTagID(tagId));
+            return new JsonResponse(200, "Get the tag's all articles successfully", articleResponseList.size(), articleResponseList);
         } catch (NullPointerException nullPointerException) {
             return new JsonResponse(404, "Tag has no article", 0, null);
         } catch (Exception e) {
@@ -165,8 +167,8 @@ public class ArticleController {
     public JsonResponse selectArticlesByArchiveName(@PathVariable(value = "archiveName")String archiveName) {
         try {
             Integer archiveId = archiveService.getArchiveByArchiveName(archiveName).getArchiveId();
-            List<Article> resultArticles = articleAPIService.getArticleWithoutTextByArchiveID(archiveId);
-            return new JsonResponse(200, "Get the archive's all articles successfully", resultArticles.size(), resultArticles);
+            List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getArticleWithoutTextByArchiveID(archiveId));
+            return new JsonResponse(200, "Get the archive's all articles successfully", articleResponseList.size(), articleResponseList);
         } catch (NullPointerException nullPointerException) {
             return new JsonResponse(404, "Archive has no article", 0, null);
         } catch (Exception e) {

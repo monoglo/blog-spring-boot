@@ -1,6 +1,7 @@
 package com.rankofmatrix.blog.service;
 
 import com.rankofmatrix.blog.model.Article;
+import com.rankofmatrix.blog.model.dto.ArticleResponse;
 
 import java.util.List;
 
@@ -49,4 +50,8 @@ public interface ArticleAPIService {
     Integer increaseArticleClickAmount(Integer aid, Integer increaseAmount);
 
     Integer increaseArticleClickAmount(Integer aid);
+
+    ArticleResponse convertToArticleResponse(Article article);
+
+    List<ArticleResponse> convertToArticleResponseList(List<Article> articleList);
 }

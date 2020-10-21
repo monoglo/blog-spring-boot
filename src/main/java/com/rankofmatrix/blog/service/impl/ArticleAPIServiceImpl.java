@@ -5,6 +5,7 @@ import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
 import com.rankofmatrix.blog.exception.ArticleIsHiddenException;
 import com.rankofmatrix.blog.exception.TagDoesNotExistException;
 import com.rankofmatrix.blog.model.*;
+import com.rankofmatrix.blog.model.dto.ArticleResponse;
 import com.rankofmatrix.blog.repository.*;
 import com.rankofmatrix.blog.service.ArticleAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     private TagRepository tagRepository;
     private TagAndArticleRepository tagAndArticleRepository;
     private ArchiveAndArticleRepository archiveAndArticleRepository;
+
+    private UserAPIServiceImpl userAPIService;
 
     @Autowired
     public void setArticleRepository(ArticleRepository articleRepository) {
@@ -47,6 +50,11 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     @Autowired
     public void setArchiveAndArticleRepository(ArchiveAndArticleRepository archiveAndArticleRepository) {
         this.archiveAndArticleRepository = archiveAndArticleRepository;
+    }
+
+    @Autowired
+    public void setUserAPIService(UserAPIServiceImpl userAPIService) {
+        this.userAPIService = userAPIService;
     }
 
     @Override
@@ -257,6 +265,24 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         } else {
             throw new ArticleDoesNotExistException();
         }
+    }
+
+    @Override
+    public ArticleResponse convertToArticleResponse(Article article) {
+        ArticleResponse articleResponse = new ArticleResponse(article);
+        articleResponse.setAuthorName(userAPIService.findUserByUid(article.getAuthorId()).getNickname());
+        return articleResponse;
+    }
+
+    @Override
+    public List<ArticleResponse> convertToArticleResponseList(List<Article> articleList) {
+        List<ArticleResponse> resultArticleResponseList = new LinkedList<>();
+        for (Article article : articleList) {
+            ArticleResponse articleResponse = new ArticleResponse(article);
+            articleResponse.setAuthorName(userAPIService.findUserByUid(article.getAuthorId()).getNickname());
+            resultArticleResponseList.add(articleResponse);
+        }
+        return resultArticleResponseList;
     }
 
 }
