@@ -160,11 +160,12 @@ public class ArticleController {
             return new JsonResponse(100, e.toString(), 0, null);
         }
     }
+
     // 查看某一归档名归档内的所有文章
     @GetMapping(path = "/archive/{archiveName}")
     @ApiOperation("查看某一归档名归档内的所有文章(不带正文)")
     @ApiImplicitParam(name = "archiveName", value = "归档名", required = true, dataType = "String")
-    public JsonResponse selectArticlesByArchiveName(@PathVariable(value = "archiveName")String archiveName) {
+    public JsonResponse selectArticlesByArchiveName(@PathVariable(value = "archiveName") String archiveName) {
         try {
             Integer archiveId = archiveService.getArchiveByArchiveName(archiveName).getArchiveId();
             List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getArticleWithoutTextByArchiveID(archiveId));
@@ -225,14 +226,35 @@ public class ArticleController {
         try {
             Integer articleAmount = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
             return new JsonResponse(200, "Add Tag successfully", 1, articleAmount);
-        } catch (ArticleDoesNotExistException e){
+        } catch (ArticleDoesNotExistException e) {
             return new JsonResponse(404, "Article does not exist", 0, null);
         } catch (TagDoesNotExistException e) {
             return new JsonResponse(403, "Tag does not exist", 0, null);
+        } catch (TagAndArticleAlreadyExistException e) {
+            return new JsonResponse(409, "TagAndArticle relation already exist", 0, null);
         } catch (Exception e) {
             return new JsonResponse(100, e.toString(), 0, null);
         }
     }
+
+    // 批量添加指定ID数组的标签到某一ID文章
+    @PutMapping(path = "/aid/{aid}/add/tags")
+    @ApiOperation("批量添加指定ID数组的标签到某一ID文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "tagIds", value = "标签的ID组", required = true, dataType = "array")
+    })
+    public JsonResponse addTagsToArticleByAidAndTagIds(@PathVariable(value = "aid") Integer aid, @RequestBody List<Integer> tagIds) {
+        for (Integer tagId : tagIds) {
+            try {
+                articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+        return new JsonResponse(200, "Add Tag successfully", 1, null);
+    }
+
     // TODO 移除归档、标签关系
     // 添加某一ID归档到某一ID文章
     @PutMapping(path = "aid/{aid}/add/archive/{archiveId}")
@@ -241,7 +263,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
             @ApiImplicitParam(name = "archiveId", value = "归档的ID", required = true, dataType = "int")
     })
-    public JsonResponse addArchiveToArticleByAidAndArchiveId(@PathVariable(value = "aid")Integer aid, @PathVariable(value = "archiveId") Integer archiveId)  {
+    public JsonResponse addArchiveToArticleByAidAndArchiveId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "archiveId") Integer archiveId) {
         try {
             Integer articleAmount = articleAPIService.addArchiveToArticleByAidAndArchiveId(aid, archiveId);
             return new JsonResponse(200, "Add Archive successfully", 1, articleAmount);
@@ -274,7 +296,7 @@ public class ArticleController {
     // 增加文章阅读量
     @ApiOperation("增加文章阅读量")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "aid", value = "被提升阅读量的文章ID",required = true, dataType = "Int"),
+            @ApiImplicitParam(name = "aid", value = "被提升阅读量的文章ID", required = true, dataType = "Int"),
             @ApiImplicitParam(name = "amount", value = "提升阅读量数值", required = true, dataType = "Int")
     })
     @PostMapping(path = "/aid/{aid}/add/clickAmount/value/{amount}")
@@ -293,7 +315,7 @@ public class ArticleController {
 
     // 在阅读文章后增加文章阅读量
     @ApiOperation("在阅读文章后增加文章阅读量")
-    @ApiImplicitParam(name = "aid", value = "被阅读的文章ID",required = true, dataType = "Int")
+    @ApiImplicitParam(name = "aid", value = "被阅读的文章ID", required = true, dataType = "Int")
     @PostMapping(path = "/aid/{aid}/read")
     public JsonResponse increaseArticleClickAmountByAidRead(@PathVariable Integer aid) {
         try {

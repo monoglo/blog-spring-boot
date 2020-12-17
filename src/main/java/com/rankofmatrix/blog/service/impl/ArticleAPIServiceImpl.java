@@ -1,9 +1,6 @@
 package com.rankofmatrix.blog.service.impl;
 
-import com.rankofmatrix.blog.exception.ArchvieDoesNotExistException;
-import com.rankofmatrix.blog.exception.ArticleDoesNotExistException;
-import com.rankofmatrix.blog.exception.ArticleIsHiddenException;
-import com.rankofmatrix.blog.exception.TagDoesNotExistException;
+import com.rankofmatrix.blog.exception.*;
 import com.rankofmatrix.blog.model.*;
 import com.rankofmatrix.blog.model.dto.ArticleResponse;
 import com.rankofmatrix.blog.repository.*;
@@ -169,6 +166,9 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         if (articleRepository.findArticleByAid(aid) != null) {
             Tag tag = tagRepository.findTagByTagId(tagId);
             if (tag != null) {
+                if (tagAndArticleRepository.findTagAndArticlesByArticleIdAndTagId(aid, tagId).size() != 0) {
+                    throw new TagAndArticleAlreadyExistException();
+                }
                 TagAndArticle newTagAndArticle = new TagAndArticle();
                 newTagAndArticle.setArticleId(aid);
                 newTagAndArticle.setTagId(tagId);

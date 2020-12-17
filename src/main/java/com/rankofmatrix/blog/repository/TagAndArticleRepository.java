@@ -10,4 +10,6 @@ public interface TagAndArticleRepository extends CrudRepository<TagAndArticle, I
     List<TagAndArticle> findTagAndArticlesByTagId(Integer tagId);
     // 检索某一指定AID的文章的关联Tag记录
     List<TagAndArticle> findTagAndArticlesByArticleId(Integer aid);
+    // 检索某一指定AID和指定TagID的文章的关联Tag记录
+    List<TagAndArticle> findTagAndArticlesByArticleIdAndTagId(Integer aid, Integer tagId);
 }
