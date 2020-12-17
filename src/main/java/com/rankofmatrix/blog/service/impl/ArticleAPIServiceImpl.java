@@ -64,7 +64,11 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     public List<Article> getAllArticleVisible() {
-        return articleRepository.findArticlesByStatus(0);
+        List<Article> resultArticles = articleRepository.findArticlesByStatus(0);
+        for (Article article : resultArticles) {
+            article.setText(null);
+        }
+        return resultArticles;
     }
 
     @Override
@@ -181,7 +185,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public Integer addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) throws ArticleDoesNotExistException, ArchvieDoesNotExistException{
+    public Integer addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) throws ArticleDoesNotExistException, ArchvieDoesNotExistException {
         if (articleRepository.findArticleByAid(aid) != null) {
             Archive archive = archiveRepository.findArchiveByArchiveId(archiveId);
             if (archive != null) {
@@ -202,7 +206,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
 
     @Override
-    public Boolean deleteArticleByAid(Integer aid) throws ArticleDoesNotExistException, ArticleIsHiddenException{
+    public Boolean deleteArticleByAid(Integer aid) throws ArticleDoesNotExistException, ArticleIsHiddenException {
         Article deletedArticle = articleRepository.findArticleByAid(aid);
         if (deletedArticle != null) {
             if (deletedArticle.getStatus() == 0) {
@@ -255,13 +259,9 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     public Integer increaseArticleClickAmount(Integer aid) throws ArticleDoesNotExistException, ArticleIsHiddenException {
         Article article = articleRepository.findArticleByAid(aid);
         if (article != null) {
-            if (article.getStatus() == 0) {
-                article.setClickAmount(article.getClickAmount() + 1);
-                articleRepository.save(article);
-                return article.getClickAmount();
-            } else {
-                throw new ArticleIsHiddenException();
-            }
+            article.setClickAmount(article.getClickAmount() + 1);
+            articleRepository.save(article);
+            return article.getClickAmount();
         } else {
             throw new ArticleDoesNotExistException();
         }
