@@ -36,6 +36,8 @@ public interface ArticleAPIService {
     Article modifyArticleByArticle(Article modifiedArticle);
     // 添加标签到某一文章
     Integer addTagToArticleByAidAndTagId(Integer aid, Integer tagId);
+    // 删除某一文章的所有标签
+    Boolean deleteAllTagsFromArticleByAid(Integer aid);
     // 添加归档到某一文章
     Integer addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId);
 

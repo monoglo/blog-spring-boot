@@ -185,6 +185,16 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
+    public Boolean deleteAllTagsFromArticleByAid(Integer aid) {
+        if (articleRepository.findArticleByAid(aid) != null) {
+            tagAndArticleRepository.deleteAllByArticleId(aid);
+            return Boolean.TRUE;
+        } else {
+            throw new ArticleDoesNotExistException();
+        }
+    }
+
+    @Override
     public Integer addArchiveToArticleByAidAndArchiveId(Integer aid, Integer archiveId) throws ArticleDoesNotExistException, ArchvieDoesNotExistException {
         if (articleRepository.findArticleByAid(aid) != null) {
             Archive archive = archiveRepository.findArchiveByArchiveId(archiveId);

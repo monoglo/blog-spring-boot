@@ -10,6 +10,7 @@ import com.rankofmatrix.blog.service.impl.TagServiceImpl;
 import com.rankofmatrix.blog.service.impl.UserAPIServiceImpl;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
@@ -239,20 +240,28 @@ public class ArticleController {
 
     // 批量添加指定ID数组的标签到某一ID文章
     @PutMapping(path = "/aid/{aid}/add/tags")
+    @Transactional
     @ApiOperation("批量添加指定ID数组的标签到某一ID文章")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
             @ApiImplicitParam(name = "tagIds", value = "标签的ID组", required = true, dataType = "array")
     })
     public JsonResponse addTagsToArticleByAidAndTagIds(@PathVariable(value = "aid") Integer aid, @RequestBody List<Integer> tagIds) {
-        for (Integer tagId : tagIds) {
-            try {
-                articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
-            } catch (Exception e) {
-                System.out.println(e.toString());
+        try {
+            articleAPIService.deleteAllTagsFromArticleByAid(aid);
+            for (Integer tagId : tagIds) {
+                try {
+                    articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
+                } catch (TagAndArticleAlreadyExistException e) {
+                    System.out.println(e.toString());
+                }
             }
+            return new JsonResponse(200, "Add Tags successfully", 0, null);
+        } catch (ArticleDoesNotExistException e) {
+            return new JsonResponse(404, "Article does not exist", 0, null);
+        } catch (TagDoesNotExistException e) {
+            return new JsonResponse(403, "Tag does not exist", 0, null);
         }
-        return new JsonResponse(200, "Add Tag successfully", 1, null);
     }
 
     // TODO 移除归档、标签关系
