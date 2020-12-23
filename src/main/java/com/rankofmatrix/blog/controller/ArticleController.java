@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -88,15 +87,19 @@ public class ArticleController {
         }
     }
 
-    // 获取某一ID的文章(包含被删除)
+    // 获取某一ID的可见文章
     @GetMapping(path = "/aid/{aid}")
-    @ApiOperation("获取某一ID的文章(包含被删除)")
+    @ApiOperation("获取某一ID的可见文章")
     @ApiImplicitParam(name = "aid", value = "文章ID", required = true, dataType = "Int")
     public JsonResponse getArticleByAid(@PathVariable(value = "aid") Integer aid) {
         try {
             Article resultArticle = articleAPIService.getArticleByAid(aid);
-            return new JsonResponse(200, "Get article successfully", 1, resultArticle);
-        } catch (ArticleDoesNotExistException e) {
+            if (resultArticle.getStatus() != 0) {
+                throw new ArticleIsHiddenException();
+            } else {
+                return new JsonResponse(200, "Get article successfully", 1, resultArticle);
+            }
+        } catch (ArticleDoesNotExistException | ArticleIsHiddenException e) {
             return new JsonResponse(404, "Article does not exist", 0, null);
         } catch (Exception e) {
             return new JsonResponse(100, e.toString(), 0, null);
