@@ -1,5 +1,7 @@
 package com.rankofmatrix.blog.controller;
 
+import com.rankofmatrix.blog.exception.PasswordDoesNotMatchException;
+import com.rankofmatrix.blog.exception.UserDoesNotExistException;
 import com.rankofmatrix.blog.service.impl.UserAPIServiceImpl;
 import com.rankofmatrix.blog.model.User;
 import com.rankofmatrix.blog.model.dto.JsonResponse;
@@ -55,12 +57,16 @@ public class UserController {
     @ApiOperation("用户登陆接口")
     @PostMapping(path = "/login")
     @ApiImplicitParam(name = "loginUser", value = "将要登陆的用户信息（邮箱、密码必要）", required = true, dataType = "User")
-    public JsonResponse loginUser(@RequestBody User loginUser) {
-        User resultUser = userAPIService.loginUser(loginUser);
-        if (resultUser != null) {
+    public JsonResponse loginUser(String username, String password) {
+        try {
+            User loginUser = new User();
+            loginUser.setEmail(username);
+            loginUser.setPassword(password);
+            User resultUser = userAPIService.loginUser(loginUser);
             return new JsonResponse(200, "Login successfully", 1, resultUser);
-        } else {
+        } catch (UserDoesNotExistException | PasswordDoesNotMatchException e) {
             return new JsonResponse(401, "Error: The email or password was not correct", 0, null);
         }
+
     }
 }

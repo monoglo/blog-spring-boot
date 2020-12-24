@@ -38,7 +38,6 @@ public class LoginUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         com.rankofmatrix.blog.model.User user = userRepository.findByEmail(email);
         if (user != null) {
-            System.out.println(AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
             return new org.springframework.security.core.userdetails.User(user.getEmail(), encoder.encode(encryptor.decrypt(user.getPassword())), AuthorityUtils.commaSeparatedStringToAuthorityList("ADMIN"));
         } else {
             throw new UserDoesNotExistException();

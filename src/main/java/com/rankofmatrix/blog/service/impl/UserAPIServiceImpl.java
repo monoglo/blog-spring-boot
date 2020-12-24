@@ -1,5 +1,6 @@
 package com.rankofmatrix.blog.service.impl;
 
+import com.rankofmatrix.blog.exception.PasswordDoesNotMatchException;
 import com.rankofmatrix.blog.exception.UserDoesNotExistException;
 import org.jasypt.encryption.StringEncryptor;
 import com.google.common.collect.Lists;
@@ -55,12 +56,14 @@ public class UserAPIServiceImpl implements UserAPIService{
         if (checkedUser != null) {
             if (encryptor.decrypt(checkedUser.getPassword()).equals(loginUser.getPassword())) {
                 checkedUser.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
-                return userRepository.save(checkedUser);
+                User resultUser = userRepository.save(checkedUser);
+                resultUser.setPassword("");
+                return resultUser;
             } else {
-                return null;
+                throw new PasswordDoesNotMatchException();
             }
         } else {
-            return null;
+            throw new UserDoesNotExistException();
         }
     }
 

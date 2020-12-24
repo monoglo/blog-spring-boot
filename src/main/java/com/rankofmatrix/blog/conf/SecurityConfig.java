@@ -14,7 +14,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin((login) -> login
-                        .successForwardUrl("/login/success")
+                        .successForwardUrl("/users/login")
                         .failureForwardUrl("/login/failed")
                 )
                 .csrf().disable()
