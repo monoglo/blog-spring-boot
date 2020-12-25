@@ -10,6 +10,8 @@ public interface ArticleRepository extends CrudRepository<Article, Integer> {
     List<Article> findArticlesByStatus(Integer status);
     // 获取某一ID文章
     Article findArticleByAid(Integer aid);
+    // 获取某一ID的可见文章
+    Article findArticleByAidAndStatus(Integer aid, Integer status);
     // 获取某一作者的处于某一状态的所有文章
     List<Article> findArticlesByAuthorIdAndStatus(Integer authorId, Integer status);
     // 获取标题中包含关键词的处于某一状态的所有文章

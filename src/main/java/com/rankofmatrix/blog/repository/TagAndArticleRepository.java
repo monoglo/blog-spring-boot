@@ -14,4 +14,6 @@ public interface TagAndArticleRepository extends CrudRepository<TagAndArticle, I
     List<TagAndArticle> findTagAndArticlesByArticleIdAndTagId(Integer aid, Integer tagId);
     // 删除某一指定AID的文章的所有关联Tag记录
     void deleteAllByArticleId(Integer aid);
+    // 获取某一标签的关联记录条数
+    Integer countByTagId(Integer tagId);
 }

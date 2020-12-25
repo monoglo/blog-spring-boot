@@ -102,7 +102,10 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         // 遍历resultTagAndArticles生成resultArticles
         for (TagAndArticle tagAndArticle : resultTagAndArticles) {
             Integer articleId = tagAndArticle.getArticleId();
-            resultArticles.add(articleRepository.findArticleByAid(articleId));
+            Article article = articleRepository.findArticleByAidAndStatus(articleId, 0);
+            if (article != null) {
+                resultArticles.add(article);
+            }
         }
         for (Article article : resultArticles) {
             article.setText(null);

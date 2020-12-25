@@ -69,4 +69,15 @@ public class UserController {
         }
 
     }
+
+    @ApiOperation("快速登陆接口")
+    @GetMapping(path = "/login/fast")
+    public JsonResponse loginUser() {
+        try {
+            User resultUser = userAPIService.fastLogin();
+            return new JsonResponse(200, "Login successfully", 1, resultUser);
+        } catch (UserDoesNotExistException | PasswordDoesNotMatchException e) {
+            return new JsonResponse(401, "Error: The email or password was not correct", 0, null);
+        }
+    }
 }

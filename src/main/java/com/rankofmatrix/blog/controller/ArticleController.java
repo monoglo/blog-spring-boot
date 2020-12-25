@@ -229,6 +229,7 @@ public class ArticleController {
     public JsonResponse addTagToArticleByAidAndTagId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "tagId") Integer tagId) {
         try {
             Integer articleAmount = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
+            tagService.syncArticleAmountByTagId(tagId);
             return new JsonResponse(200, "Add Tag successfully", 1, articleAmount);
         } catch (ArticleDoesNotExistException e) {
             return new JsonResponse(404, "Article does not exist", 0, null);
@@ -255,6 +256,7 @@ public class ArticleController {
             for (Integer tagId : tagIds) {
                 try {
                     articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
+                    tagService.syncArticleAmountByTagId(tagId);
                 } catch (TagAndArticleAlreadyExistException e) {
                     System.out.println(e.toString());
                 }

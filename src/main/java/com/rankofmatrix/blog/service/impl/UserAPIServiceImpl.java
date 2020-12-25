@@ -8,13 +8,15 @@ import com.rankofmatrix.blog.model.User;
 import com.rankofmatrix.blog.repository.UserRepository;
 import com.rankofmatrix.blog.service.UserAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 @Service
-public class UserAPIServiceImpl implements UserAPIService{
+public class UserAPIServiceImpl implements UserAPIService {
 
     private UserRepository userRepository;
     private StringEncryptor encryptor;
@@ -52,7 +54,7 @@ public class UserAPIServiceImpl implements UserAPIService{
     @Override
     public User loginUser(User loginUser) {
         User checkedUser;
-        checkedUser =  userRepository.findByEmail(loginUser.getEmail());
+        checkedUser = userRepository.findByEmail(loginUser.getEmail());
         if (checkedUser != null) {
             if (encryptor.decrypt(checkedUser.getPassword()).equals(loginUser.getPassword())) {
                 checkedUser.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
@@ -68,7 +70,22 @@ public class UserAPIServiceImpl implements UserAPIService{
     }
 
     @Override
-    public User findUserByUid(Integer uid) throws UserDoesNotExistException{
+    public User fastLogin() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        System.out.println(username);
+        User resultUser = userRepository.findByEmail(username);
+        resultUser.setPassword("");
+        return resultUser;
+    }
+
+    @Override
+    public User findUserByUid(Integer uid) throws UserDoesNotExistException {
         User resultUser = userRepository.findByUid(uid);
         if (resultUser != null) {
             return resultUser;

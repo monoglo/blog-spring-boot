@@ -29,4 +29,7 @@ public interface TagService {
     // 删除某一TagID的标签
     Integer deleteTagByTagId(Integer tagId);
 
+    // 同步文章数量
+    Integer syncArticleAmountByTagId(Integer tagId);
+
 }

@@ -73,4 +73,12 @@ public class TagServiceImpl implements TagService {
         return tagRepository.deleteByTagId(tagId);
     }
 
+    @Override
+    public Integer syncArticleAmountByTagId(Integer tagId) {
+        Tag tag = tagRepository.findTagByTagId(tagId);
+        tag.setArticleAmount(tagAndArticleRepository.countByTagId(tagId));
+        tagRepository.save(tag);
+        return tag.getArticleAmount();
+    }
+
 }
