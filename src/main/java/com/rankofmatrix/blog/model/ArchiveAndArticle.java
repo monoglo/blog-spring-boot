@@ -1,9 +1,11 @@
 package com.rankofmatrix.blog.model;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@org.hibernate.annotations.Cache(region = "archive_articleCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "archive_article")
 public class ArchiveAndArticle {
     @Id

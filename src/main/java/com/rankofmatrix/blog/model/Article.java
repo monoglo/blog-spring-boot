@@ -1,11 +1,14 @@
 package com.rankofmatrix.blog.model;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-public class Article {
+@org.hibernate.annotations.Cache(region = "articleCache", usage = CacheConcurrencyStrategy.READ_WRITE)
+public class Article implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer aid;

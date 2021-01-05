@@ -1,10 +1,12 @@
 package com.rankofmatrix.blog.model.dto;
 
-public class JsonResponse {
+import java.io.Serializable;
+
+public class JsonResponse implements Serializable {
     private Integer code;
     private String message;
     private Integer length;
-    private Object data;
+    private transient Object data;
 
     public JsonResponse(Integer code, String message, Integer length, Object data) {
         this.code = code;

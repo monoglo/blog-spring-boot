@@ -1,9 +1,11 @@
 package com.rankofmatrix.blog.model;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@org.hibernate.annotations.Cache(region = "archiveCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Archive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,6 +6,7 @@ import com.rankofmatrix.blog.model.dto.ArticleResponse;
 import com.rankofmatrix.blog.repository.*;
 import com.rankofmatrix.blog.service.ArticleAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
@@ -128,6 +129,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
+    @Cacheable(value = "articles", key = "#titleKey", unless = "#result.size() < 2")
     public List<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
         List<Article> resultArticles = articleRepository.findArticlesByTitleContainsAndStatus(titleKey, 0);
         for (Article article : resultArticles) {
