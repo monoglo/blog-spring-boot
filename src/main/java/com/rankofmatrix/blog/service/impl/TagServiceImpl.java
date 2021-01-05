@@ -7,6 +7,7 @@ import com.rankofmatrix.blog.repository.TagAndArticleRepository;
 import com.rankofmatrix.blog.repository.TagRepository;
 import com.rankofmatrix.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class TagServiceImpl implements TagService {
         this.tagAndArticleRepository = tagAndArticleRepository;
     }
     @Override
+    @Cacheable(value = "allTags")
     public List<Tag> getAllTags() {
         return Lists.newArrayList(tagRepository.findAll());
     }

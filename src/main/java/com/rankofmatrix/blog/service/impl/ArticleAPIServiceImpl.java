@@ -61,6 +61,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
+    @Cacheable(value = "visibleArticles")
     public List<Article> getAllArticleVisible() {
         List<Article> resultArticles = articleRepository.findArticlesByStatus(0);
         for (Article article : resultArticles) {
@@ -95,6 +96,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
+    @Cacheable(value = "tagIdArticles", key = "#tagId")
     public List<Article> getArticleWithoutTextByTagID(Integer tagId) {
         // 得到Tag和Article的关联记录
         List<TagAndArticle> resultTagAndArticles = tagAndArticleRepository.findTagAndArticlesByTagId(tagId);
@@ -129,7 +131,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    @Cacheable(value = "articles", key = "#titleKey", unless = "#result.size() < 2")
+    @Cacheable(value = "titleKeyArticles", key = "#titleKey", unless = "#result.size() < 2")
     public List<Article> selectArticleWithoutTextByTitleKey(String titleKey) {
         List<Article> resultArticles = articleRepository.findArticlesByTitleContainsAndStatus(titleKey, 0);
         for (Article article : resultArticles) {
