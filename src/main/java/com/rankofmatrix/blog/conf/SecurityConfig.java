@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.PUT, "/archives/").authenticated()
                         .antMatchers(HttpMethod.DELETE, "/archives/id/*").authenticated()
                         .antMatchers(HttpMethod.GET, "/users/login/fast").authenticated()
+                        .antMatchers(HttpMethod.POST, "/users/register").authenticated()
                         .anyRequest().permitAll()
                 )
                 .httpBasic();
