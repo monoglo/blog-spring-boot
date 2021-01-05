@@ -1,5 +1,8 @@
 # Blog Spring Boot
 
 - Spring Boot
+- Spring Security
 - JPA
-- MySQL
+- Redis Cache
+- MySQL (MariaDB)
+- Swagger UI
