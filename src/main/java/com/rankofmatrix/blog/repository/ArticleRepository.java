@@ -2,9 +2,11 @@ package com.rankofmatrix.blog.repository;
 
 import com.rankofmatrix.blog.model.Article;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ArticleRepository extends CrudRepository<Article, Integer> {
     // 获取处于某一状态所有文章
     List<Article> findArticlesByStatus(Integer status);

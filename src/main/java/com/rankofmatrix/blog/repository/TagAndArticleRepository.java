@@ -2,9 +2,11 @@ package com.rankofmatrix.blog.repository;
 
 import com.rankofmatrix.blog.model.TagAndArticle;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TagAndArticleRepository extends CrudRepository<TagAndArticle, Integer> {
     // 检索某一指定TagID的Tag的关联文章记录
     List<TagAndArticle> findTagAndArticlesByTagId(Integer tagId);
