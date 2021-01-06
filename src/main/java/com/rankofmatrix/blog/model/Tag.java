@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@org.hibernate.annotations.Cache(region = "tagCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Tag implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

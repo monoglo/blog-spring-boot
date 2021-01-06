@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@org.hibernate.annotations.Cache(region = "articleCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

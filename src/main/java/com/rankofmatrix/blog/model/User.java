@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@org.hibernate.annotations.Cache(region = "userCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

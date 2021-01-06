@@ -5,7 +5,6 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@org.hibernate.annotations.Cache(region = "archiveCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Archive {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
