@@ -78,7 +78,7 @@ public class UserAPIServiceImpl implements UserAPIService {
         } else {
             username = principal.toString();
         }
-        System.out.println(username);
+//        System.out.println(username);
         User resultUser = userRepository.findByEmail(username);
         resultUser.setPassword("");
         return resultUser;
