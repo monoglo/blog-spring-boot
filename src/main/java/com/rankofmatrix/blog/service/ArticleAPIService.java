@@ -9,9 +9,11 @@ public interface ArticleAPIService {
     // 获取所有文章
     List<Article> getAllArticle();
     // 获取所有可见的文章
-    List<Article> getAllArticleVisible();
+    List<Article> getAllArticleVisible(Integer page, Integer size);
+    // 获取所有可见的文章总数
+    Integer countAllArticleVisible();
     // 获取所有被删除的文章
-    List<Article> getAllArticleDeleted();
+    List<Article> getAllArticleDeleted(Integer page, Integer size);
 
     // TODO 不带正文的service方法↑
 

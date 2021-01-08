@@ -7,6 +7,8 @@ import com.rankofmatrix.blog.repository.*;
 import com.rankofmatrix.blog.service.ArticleAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
@@ -62,8 +64,9 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
     @Override
     @Cacheable(value = "visibleArticles")
-    public List<Article> getAllArticleVisible() {
-        List<Article> resultArticles = articleRepository.findArticlesByStatus(0);
+    public List<Article> getAllArticleVisible(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Article> resultArticles = articleRepository.findArticlesByStatusOrderByAidDesc(0, pageable);
         for (Article article : resultArticles) {
             article.setText(null);
         }
@@ -71,8 +74,15 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     }
 
     @Override
-    public List<Article> getAllArticleDeleted() {
-        return articleRepository.findArticlesByStatus(1);
+    @Cacheable(value = "visibleArticlesCount")
+    public Integer countAllArticleVisible() {
+        return articleRepository.countByStatus(0);
+    }
+
+    @Override
+    public List<Article> getAllArticleDeleted(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return articleRepository.findArticlesByStatusOrderByAidDesc(1, pageable);
     }
 
     @Override

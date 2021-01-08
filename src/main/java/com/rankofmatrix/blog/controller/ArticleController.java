@@ -64,8 +64,12 @@ public class ArticleController {
     // 获取所有可见的文章
     @GetMapping(path = "/visible")
     @ApiOperation("获取所有可见的文章")
-    public JsonResponse getAllArticleVisible() {
-        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleVisible());
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "size", value = "页大小", required = true, dataType = "int")
+    })
+    public JsonResponse getAllArticleVisible(Integer page, Integer size) {
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleVisible(page, size));
         int resultLength = articleResponseList.size();
         if (resultLength > 0) {
             return new JsonResponse(200, "Get all articles successfully", resultLength, articleResponseList);
@@ -74,11 +78,22 @@ public class ArticleController {
         }
     }
 
+    // 获取所有可见的文章总数
+    @GetMapping(path = "/visible/count")
+    @ApiOperation("获取所有可见的文章总数")
+    public JsonResponse getAllArticleVisible() {
+        return new JsonResponse(200, "Get all articles successfully", 1, articleAPIService.countAllArticleVisible());
+    }
+
     // 获取所有被删除的文章
     @GetMapping(path = "/deleted")
     @ApiOperation("获取所有被删除的文章")
-    public JsonResponse getAllArticleDeleted() {
-        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleDeleted());
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "size", value = "页大小", required = true, dataType = "int")
+    })
+    public JsonResponse getAllArticleDeleted(Integer page, Integer size) {
+        List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleDeleted(page, size));
         int resultLength = articleResponseList.size();
         if (resultLength > 0) {
             return new JsonResponse(200, "Get all articles successfully", resultLength, articleResponseList);
