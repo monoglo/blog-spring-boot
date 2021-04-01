@@ -2,7 +2,7 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.model.dto.JsonResponse;
 import com.rankofmatrix.blog.model.Tag;
-import com.rankofmatrix.blog.service.impl.TagServiceImpl;
+import com.rankofmatrix.blog.service.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -21,10 +21,10 @@ import java.util.List;
 })
 public class TagController {
 
-    private TagServiceImpl tagService;
+    private TagService tagService;
 
     @Autowired
-    public void setTagService(TagServiceImpl tagService) {
+    public void setTagService(TagService tagService) {
         this.tagService = tagService;
     }
 

@@ -2,7 +2,7 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.model.Archive;
 import com.rankofmatrix.blog.model.dto.JsonResponse;
-import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
+import com.rankofmatrix.blog.service.ArchiveService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +18,10 @@ import java.util.List;
 })
 public class ArchiveController {
 
-    private ArchiveServiceImpl archiveService;
+    private ArchiveService archiveService;
 
     @Autowired
-    public void setArchiveService(ArchiveServiceImpl archiveService) {
+    public void setArchiveService(ArchiveService archiveService) {
         this.archiveService = archiveService;
     }
 

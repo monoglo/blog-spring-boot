@@ -2,7 +2,7 @@ package com.rankofmatrix.blog.controller;
 
 import com.rankofmatrix.blog.exception.PasswordDoesNotMatchException;
 import com.rankofmatrix.blog.exception.UserDoesNotExistException;
-import com.rankofmatrix.blog.service.impl.UserAPIServiceImpl;
+import com.rankofmatrix.blog.service.UserAPIService;
 import com.rankofmatrix.blog.model.User;
 import com.rankofmatrix.blog.model.dto.JsonResponse;
 import io.swagger.annotations.*;
@@ -19,10 +19,10 @@ import java.util.List;
 })
 public class UserController {
 
-    private UserAPIServiceImpl userAPIService;
+    private UserAPIService userAPIService;
 
     @Autowired
-    public void setUserAPIServiceImpl(UserAPIServiceImpl userAPIService) {
+    public void setUserAPIServiceImpl(UserAPIService userAPIService) {
         this.userAPIService = userAPIService;
     }
 

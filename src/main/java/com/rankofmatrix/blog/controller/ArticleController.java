@@ -4,10 +4,10 @@ import com.rankofmatrix.blog.exception.*;
 import com.rankofmatrix.blog.model.Article;
 import com.rankofmatrix.blog.model.dto.ArticleResponse;
 import com.rankofmatrix.blog.model.dto.JsonResponse;
-import com.rankofmatrix.blog.service.impl.ArchiveServiceImpl;
-import com.rankofmatrix.blog.service.impl.ArticleAPIServiceImpl;
-import com.rankofmatrix.blog.service.impl.TagServiceImpl;
-import com.rankofmatrix.blog.service.impl.UserAPIServiceImpl;
+import com.rankofmatrix.blog.service.ArchiveService;
+import com.rankofmatrix.blog.service.ArticleAPIService;
+import com.rankofmatrix.blog.service.TagService;
+import com.rankofmatrix.blog.service.UserAPIService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,28 +23,28 @@ import java.util.List;
 })
 public class ArticleController {
 
-    private ArticleAPIServiceImpl articleAPIService;
-    private TagServiceImpl tagService;
-    private ArchiveServiceImpl archiveService;
-    private UserAPIServiceImpl userAPIService;
+    private ArticleAPIService articleAPIService;
+    private TagService tagService;
+    private ArchiveService archiveService;
+    private UserAPIService userAPIService;
 
     @Autowired
-    public void setArticleAPIService(ArticleAPIServiceImpl articleAPIService) {
+    public void setArticleAPIService(ArticleAPIService articleAPIService) {
         this.articleAPIService = articleAPIService;
     }
 
     @Autowired
-    public void setTagService(TagServiceImpl tagService) {
+    public void setTagService(TagService tagService) {
         this.tagService = tagService;
     }
 
     @Autowired
-    public void setArchiveService(ArchiveServiceImpl archiveService) {
+    public void setArchiveService(ArchiveService archiveService) {
         this.archiveService = archiveService;
     }
 
     @Autowired
-    public void setUserAPIService(UserAPIServiceImpl userAPIService) {
+    public void setUserAPIService(UserAPIService userAPIService) {
         this.userAPIService = userAPIService;
     }
 
