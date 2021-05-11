@@ -5,12 +5,15 @@ import com.rankofmatrix.blog.model.*;
 import com.rankofmatrix.blog.model.dto.ArticleResponse;
 import com.rankofmatrix.blog.repository.*;
 import com.rankofmatrix.blog.service.ArticleAPIService;
+import com.rankofmatrix.blog.service.TagService;
+import com.rankofmatrix.blog.service.UserAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.LinkedList;
@@ -25,7 +28,9 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     private TagAndArticleRepository tagAndArticleRepository;
     private ArchiveAndArticleRepository archiveAndArticleRepository;
 
-    private UserAPIServiceImpl userAPIService;
+    private UserAPIService userAPIService;
+    @Autowired
+    private TagService tagService;
 
     @Autowired
     public void setArticleRepository(ArticleRepository articleRepository) {
@@ -233,12 +238,18 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
 
 
     @Override
+    @Transactional
     public Boolean deleteArticleByAid(Integer aid) throws ArticleDoesNotExistException, ArticleIsHiddenException {
         Article deletedArticle = articleRepository.findArticleByAid(aid);
+        List<TagAndArticle> tagAndArticleList = tagAndArticleRepository.findTagAndArticlesByArticleId(aid);
         if (deletedArticle != null) {
             if (deletedArticle.getStatus() == 0) {
                 deletedArticle.setStatus(1);
                 articleRepository.save(deletedArticle);
+                tagAndArticleRepository.deleteAllByArticleId(aid);
+                for (TagAndArticle tagAndArticle: tagAndArticleList) {
+                    tagService.syncArticleAmountByTagId(tagAndArticle.getTagId());
+                }
                 return Boolean.TRUE;
             } else {
                 throw new ArticleIsHiddenException();
