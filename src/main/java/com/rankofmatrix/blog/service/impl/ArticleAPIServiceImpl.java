@@ -167,6 +167,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         checkedArticle.setTitle(newArticle.getTitle());
         checkedArticle.setText(newArticle.getText());
         checkedArticle.setAuthorId(newArticle.getAuthorId());
+        checkedArticle.setBackgroundImageUrl(newArticle.getBackgroundImageUrl());
         return articleRepository.save(checkedArticle);
     }
 
@@ -177,6 +178,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
             checkedArticle.setTitle(modifiedArticle.getTitle());
             checkedArticle.setText(modifiedArticle.getText());
             checkedArticle.setLastEditTime(new Timestamp(System.currentTimeMillis()));
+            checkedArticle.setBackgroundImageUrl(modifiedArticle.getBackgroundImageUrl());
             return articleRepository.save(checkedArticle);
         } else {
             throw new ArticleDoesNotExistException();

@@ -15,6 +15,7 @@ public class ArticleResponse extends Article {
         this.setCreateTime(article.getCreateTime());
         this.setLastEditTime(article.getLastEditTime());
         this.setClickAmount(article.getClickAmount());
+        this.setBackgroundImageUrl(article.getBackgroundImageUrl());
         this.setStatus(article.getStatus());
     }
 

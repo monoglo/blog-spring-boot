@@ -21,6 +21,8 @@ public class Article implements Serializable {
     private Timestamp lastEditTime = new Timestamp(System.currentTimeMillis());
     @Column(name = "click_amount")
     private Integer clickAmount = 0;
+    @Column(name = "background_image_url")
+    private String backgroundImageUrl;
     private Integer status = 0;
 
     public Integer getAid() {
@@ -77,6 +79,14 @@ public class Article implements Serializable {
 
     public void setClickAmount(Integer clickAmount) {
         this.clickAmount = clickAmount;
+    }
+
+    public String getBackgroundImageUrl() {
+        return backgroundImageUrl;
+    }
+
+    public void setBackgroundImageUrl(String backgroundImageUrl) {
+        this.backgroundImageUrl = backgroundImageUrl;
     }
 
     public Integer getStatus() {
