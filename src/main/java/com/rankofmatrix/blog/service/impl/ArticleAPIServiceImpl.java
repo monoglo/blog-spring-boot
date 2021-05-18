@@ -168,6 +168,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
         checkedArticle.setText(newArticle.getText());
         checkedArticle.setAuthorId(newArticle.getAuthorId());
         checkedArticle.setBackgroundImageUrl(newArticle.getBackgroundImageUrl());
+        checkedArticle.setBackgroundImageCopyright(newArticle.getBackgroundImageCopyright());
         return articleRepository.save(checkedArticle);
     }
 
@@ -179,6 +180,7 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
             checkedArticle.setText(modifiedArticle.getText());
             checkedArticle.setLastEditTime(new Timestamp(System.currentTimeMillis()));
             checkedArticle.setBackgroundImageUrl(modifiedArticle.getBackgroundImageUrl());
+            checkedArticle.setBackgroundImageCopyright(modifiedArticle.getBackgroundImageCopyright());
             return articleRepository.save(checkedArticle);
         } else {
             throw new ArticleDoesNotExistException();

@@ -23,6 +23,8 @@ public class Article implements Serializable {
     private Integer clickAmount = 0;
     @Column(name = "background_image_url")
     private String backgroundImageUrl;
+    @Column(name = "background_image_copyright")
+    private String backgroundImageCopyright;
     private Integer status = 0;
 
     public Integer getAid() {
@@ -87,6 +89,14 @@ public class Article implements Serializable {
 
     public void setBackgroundImageUrl(String backgroundImageUrl) {
         this.backgroundImageUrl = backgroundImageUrl;
+    }
+
+    public String getBackgroundImageCopyright() {
+        return backgroundImageCopyright;
+    }
+
+    public void setBackgroundImageCopyright(String backgroundImageCopyright) {
+        this.backgroundImageCopyright = backgroundImageCopyright;
     }
 
     public Integer getStatus() {
