@@ -271,11 +271,11 @@ public class ArticleController {
             for (Integer tagId : tagIds) {
                 try {
                     articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
-                    tagService.syncArticleAmountByTagId(tagId);
                 } catch (TagAndArticleAlreadyExistException e) {
                     System.out.println(e.toString());
                 }
             }
+            tagService.syncAllArticleAmount();
             return new JsonResponse(200, "Add Tags successfully", 0, null);
         } catch (ArticleDoesNotExistException e) {
             return new JsonResponse(404, "Article does not exist", 0, null);

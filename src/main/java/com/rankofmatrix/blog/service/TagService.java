@@ -32,4 +32,6 @@ public interface TagService {
     // 同步文章数量
     Integer syncArticleAmountByTagId(Integer tagId);
 
+    Boolean syncAllArticleAmount();
+
 }

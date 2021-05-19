@@ -7,6 +7,7 @@ import com.rankofmatrix.blog.repository.TagAndArticleRepository;
 import com.rankofmatrix.blog.repository.TagRepository;
 import com.rankofmatrix.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -61,26 +62,41 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @CacheEvict(value = "allTags", allEntries = true)
     public Tag createTagByTag(Tag newTag) {
         return tagRepository.save(newTag);
     }
 
     @Override
+    @CacheEvict(value = "allTags", allEntries = true)
     public Tag modifyTagByTag(Tag modifiedTag) {
         return tagRepository.save(modifiedTag);
     }
 
     @Override
+    @CacheEvict(value = "allTags", allEntries = true)
     public Integer deleteTagByTagId(Integer tagId) {
         return tagRepository.deleteByTagId(tagId);
     }
 
     @Override
+    @CacheEvict(value = "tagIdArticles", key = "#tagId")
     public Integer syncArticleAmountByTagId(Integer tagId) {
         Tag tag = tagRepository.findTagByTagId(tagId);
         tag.setArticleAmount(tagAndArticleRepository.countByTagId(tagId));
         tagRepository.save(tag);
         return tag.getArticleAmount();
+    }
+
+    @Override
+    @CacheEvict(value = "tagIdArticles", allEntries = true)
+    public Boolean syncAllArticleAmount() {
+        Iterable<Tag> tagList = tagRepository.findAll();
+        tagList.forEach(tag -> {
+            tag.setArticleAmount(tagAndArticleRepository.countByTagId(tag.getTagId()));
+            tagRepository.save(tag);
+        });
+        return Boolean.TRUE;
     }
 
 }
