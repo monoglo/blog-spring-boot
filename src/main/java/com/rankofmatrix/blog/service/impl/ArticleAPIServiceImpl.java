@@ -175,12 +175,16 @@ public class ArticleAPIServiceImpl implements ArticleAPIService {
     @Override
     public Article modifyArticleByArticle(Article modifiedArticle) throws ArticleDoesNotExistException {
         Article checkedArticle = articleRepository.findArticleByAid(modifiedArticle.getAid());
+        List<TagAndArticle> tagAndArticleList = tagAndArticleRepository.findTagAndArticlesByArticleId(modifiedArticle.getAid());
         if (checkedArticle != null) {
             checkedArticle.setTitle(modifiedArticle.getTitle());
             checkedArticle.setText(modifiedArticle.getText());
             checkedArticle.setLastEditTime(new Timestamp(System.currentTimeMillis()));
             checkedArticle.setBackgroundImageUrl(modifiedArticle.getBackgroundImageUrl());
             checkedArticle.setBackgroundImageCopyright(modifiedArticle.getBackgroundImageCopyright());
+            for (TagAndArticle tagAndArticle: tagAndArticleList) {
+                tagService.syncArticleAmountByTagId(tagAndArticle.getTagId());
+            }
             return articleRepository.save(checkedArticle);
         } else {
             throw new ArticleDoesNotExistException();
