@@ -20,8 +20,8 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
     @Bean(name = "shiroFilterFactoryBean")
-    public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+    public CustomShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+        CustomShiroFilterFactoryBean shiroFilterFactoryBean = new CustomShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/api/users/login");
 //        shiroFilterFactoryBean.setUnauthorizedUrl("/notRole");

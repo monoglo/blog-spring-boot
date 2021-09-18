@@ -92,29 +92,6 @@ public class UserController {
     @GetMapping(path = "/logout")
     public JsonResponse logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityUtils.getSubject().logout();
-//        HttpSession session = request.getSession(false);
-//        if (request.isRequestedSessionIdValid() && session != null) {
-//            session.invalidate();
-//        }
-//        Cookie[] cookies = request.getCookies();
-//        for (Cookie cookie : cookies) {
-//            cookie.setMaxAge(0);
-//            cookie.setValue(null);
-//            cookie.setPath("/");
-//            response.addCookie(cookie);
-//        }
         return new JsonResponse(200, "Logout successfully", 0, null);
-    }
-
-    @ApiOperation("快速登陆接口")
-    @GetMapping(path = "/login/fast")
-    public JsonResponse loginUser() {
-        User resultUser = (User) SecurityUtils.getSubject().getPrincipal();
-        System.out.println(SecurityUtils.getSubject().isAuthenticated());
-        if (resultUser != null) {
-            return new JsonResponse(200, "Login successfully", 1, resultUser);
-        } else {
-            return new JsonResponse(401, "Error: The email or password was not correct", 0, null);
-        }
     }
 }

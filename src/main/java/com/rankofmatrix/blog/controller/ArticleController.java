@@ -170,12 +170,11 @@ public class ArticleController {
     }
 
     // 查看含有某一标签名标签的所有文章
-    @GetMapping(path = "/tag/{tagName}")
+    @GetMapping(path = "/tagId/{tagId}")
     @ApiOperation("查看含有某一标签名标签的所有文章(不带正文)")
-    @ApiImplicitParam(name = "tagName", value = "标签名", required = true, dataType = "String")
-    public JsonResponse selectArticlesByTagName(@PathVariable(value = "tagName") String tagName) {
+    @ApiImplicitParam(name = "tagId", value = "标签名", required = true, dataType = "Int")
+    public JsonResponse selectArticlesByTagId(@PathVariable(value = "tagId") Integer tagId) {
         try {
-            Integer tagId = tagService.getTagByTagName(tagName).getTagId();
             List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getArticleWithoutTextByTagID(tagId));
             return new JsonResponse(200, "Get the tag's all articles successfully", articleResponseList.size(), articleResponseList);
         } catch (NullPointerException nullPointerException) {
