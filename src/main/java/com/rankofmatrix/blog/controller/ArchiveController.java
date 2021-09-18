@@ -4,6 +4,7 @@ import com.rankofmatrix.blog.model.Archive;
 import com.rankofmatrix.blog.model.dto.JsonResponse;
 import com.rankofmatrix.blog.service.ArchiveService;
 import io.swagger.annotations.*;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +97,7 @@ public class ArchiveController {
     @PostMapping(path = "/")
     @ApiOperation("创建新的归档")
     @ApiImplicitParam(name = "newArchive", value = "将要创建归档的信息", required = true, dataType = "Archive")
+    @RequiresAuthentication
     public JsonResponse createArchiveByArchive(@RequestBody Archive newArchive) {
         Archive resultArchive = archiveService.createArchiveByArchive(newArchive);
         if (resultArchive != null) {
@@ -109,6 +111,7 @@ public class ArchiveController {
     @PutMapping(path = "/")
     @ApiOperation("修改某一归档")
     @ApiImplicitParam(name = "modifiedArchive", value = "将要修改归档的信息", required = true, dataType = "Archive")
+    @RequiresAuthentication
     public JsonResponse updateArchiveByArchive(@RequestBody Archive modifiedArchive) {
         Archive resultArchive = archiveService.modifyArchiveByArchive(modifiedArchive);
         if (resultArchive != null) {
@@ -123,6 +126,7 @@ public class ArchiveController {
     @Transactional
     @ApiOperation("删除某一ArchiveID的归档")
     @ApiImplicitParam(name = "id", value = "将要删除归档的ID", required = true, dataType = "Int")
+    @RequiresAuthentication
     public JsonResponse deleteArchiveByArchiveId(@PathVariable(value = "id") Integer archiveId) {
         Integer result = archiveService.deleteArchiveByArchiveId(archiveId);
         if (result == 1) {

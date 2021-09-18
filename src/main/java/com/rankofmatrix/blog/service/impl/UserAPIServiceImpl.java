@@ -1,15 +1,16 @@
 package com.rankofmatrix.blog.service.impl;
 
-import com.rankofmatrix.blog.exception.PasswordDoesNotMatchException;
+import com.rankofmatrix.blog.exception.RepeatLoginException;
 import com.rankofmatrix.blog.exception.UserDoesNotExistException;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
 import org.jasypt.encryption.StringEncryptor;
 import com.google.common.collect.Lists;
 import com.rankofmatrix.blog.model.User;
 import com.rankofmatrix.blog.repository.UserRepository;
 import com.rankofmatrix.blog.service.UserAPIService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -53,35 +54,20 @@ public class UserAPIServiceImpl implements UserAPIService {
 
     @Override
     public User loginUser(User loginUser) {
-        User checkedUser;
-        checkedUser = userRepository.findByEmail(loginUser.getEmail());
-        if (checkedUser != null) {
-            if (encryptor.decrypt(checkedUser.getPassword()).equals(loginUser.getPassword())) {
-                checkedUser.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
-                User resultUser = userRepository.save(checkedUser);
-                resultUser.setPassword("");
-                return resultUser;
-            } else {
-                throw new PasswordDoesNotMatchException();
-            }
+        Subject currentUser = SecurityUtils.getSubject();
+        if (!currentUser.isAuthenticated()) {
+            UsernamePasswordToken token = new UsernamePasswordToken(loginUser.getEmail(), loginUser.getPassword());
+            currentUser.login(token);
+            System.out.println(SecurityUtils.getSubject().getPrincipal());
+            return (User) SecurityUtils.getSubject().getPrincipal();
         } else {
-            throw new UserDoesNotExistException();
+            throw new RepeatLoginException();
         }
     }
 
     @Override
     public User fastLogin() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-//        System.out.println(username);
-        User resultUser = userRepository.findByEmail(username);
-        resultUser.setPassword("");
-        return resultUser;
+        return (User) SecurityUtils.getSubject().getSession().getAttribute("user");
     }
 
     @Override

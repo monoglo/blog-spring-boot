@@ -9,6 +9,9 @@ import com.rankofmatrix.blog.service.ArticleAPIService;
 import com.rankofmatrix.blog.service.TagService;
 import com.rankofmatrix.blog.service.UserAPIService;
 import io.swagger.annotations.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +54,7 @@ public class ArticleController {
     // 获取所有文章(包含被删除)
     @GetMapping(path = "/")
     @ApiOperation("获取所有文章(包含被删除)")
+    @RequiresAuthentication
     public JsonResponse getAllArticle() {
         List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticle());
         int resultLength = articleResponseList.size();
@@ -92,6 +96,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
             @ApiImplicitParam(name = "size", value = "页大小", required = true, dataType = "int")
     })
+    @RequiresAuthentication
     public JsonResponse getAllArticleDeleted(Integer page, Integer size) {
         List<ArticleResponse> articleResponseList = articleAPIService.convertToArticleResponseList(articleAPIService.getAllArticleDeleted(page, size));
         int resultLength = articleResponseList.size();
@@ -200,6 +205,7 @@ public class ArticleController {
     @PostMapping(path = "/")
     @ApiOperation("创建新的文章")
     @ApiImplicitParam(name = "createArticle", value = "将要创建的文章信息(标题必要)", required = true, dataType = "Article")
+    @RequiresAuthentication
     public JsonResponse createArticleByArticle(@RequestBody Article createArticle) {
         System.out.println(createArticle);
         try {
@@ -220,7 +226,9 @@ public class ArticleController {
     @PutMapping(path = "/")
     @ApiOperation("修改文章(包含被删除)")
     @ApiImplicitParam(name = "updateArticle", value = "将要修改的文章信息", required = true, dataType = "Article")
+    @RequiresAuthentication
     public JsonResponse modifyArticleByArticle(@RequestBody Article updateArticle) {
+        System.out.println(SecurityUtils.getSubject().getPrincipal());
         try {
             articleAPIService.hasArticleTitleAndTextAndAid(updateArticle);
             Article modifiedArticle = articleAPIService.modifyArticleByArticle(updateArticle);
@@ -241,6 +249,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
             @ApiImplicitParam(name = "tagId", value = "标签的ID", required = true, dataType = "int")
     })
+    @RequiresAuthentication
     public JsonResponse addTagToArticleByAidAndTagId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "tagId") Integer tagId) {
         try {
             Integer articleAmount = articleAPIService.addTagToArticleByAidAndTagId(aid, tagId);
@@ -265,6 +274,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
             @ApiImplicitParam(name = "tagIds", value = "标签的ID组", required = true, dataType = "array")
     })
+    @RequiresAuthentication
     public JsonResponse addTagsToArticleByAidAndTagIds(@PathVariable(value = "aid") Integer aid, @RequestBody List<Integer> tagIds) {
         try {
             articleAPIService.deleteAllTagsFromArticleByAid(aid);
@@ -292,6 +302,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "aid", value = "文章的ID", required = true, dataType = "int"),
             @ApiImplicitParam(name = "archiveId", value = "归档的ID", required = true, dataType = "int")
     })
+    @RequiresAuthentication
     public JsonResponse addArchiveToArticleByAidAndArchiveId(@PathVariable(value = "aid") Integer aid, @PathVariable(value = "archiveId") Integer archiveId) {
         try {
             Integer articleAmount = articleAPIService.addArchiveToArticleByAidAndArchiveId(aid, archiveId);
@@ -309,6 +320,7 @@ public class ArticleController {
     @ApiOperation("删除某一ID的文章")
     @ApiImplicitParam(name = "aid", value = "将要删除的文章ID", required = true, dataType = "Int")
     @DeleteMapping(path = "/aid/{aid}")
+    @RequiresAuthentication
     public JsonResponse deleteArticleByAid(@PathVariable(value = "aid") Integer aid) {
         try {
             articleAPIService.deleteArticleByAid(aid);
@@ -329,6 +341,7 @@ public class ArticleController {
             @ApiImplicitParam(name = "amount", value = "提升阅读量数值", required = true, dataType = "Int")
     })
     @PostMapping(path = "/aid/{aid}/add/clickAmount/value/{amount}")
+    @RequiresAuthentication
     public JsonResponse increaseArticleClickAmountByAidAndAmount(@PathVariable Integer aid, @PathVariable Integer amount) {
         try {
             Integer resultClickAmount = articleAPIService.increaseArticleClickAmount(aid, amount);

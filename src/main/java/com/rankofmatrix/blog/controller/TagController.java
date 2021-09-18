@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.SwaggerDefinition;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -100,6 +101,7 @@ public class TagController {
     @PostMapping(path = "/")
     @ApiOperation("创建新的标签")
     @ApiImplicitParam(name = "newTag", value = "将要创建标签的信息", required = true, dataType = "Tag")
+    @RequiresAuthentication
     public JsonResponse createTagByTag(@RequestBody Tag newTag) {
         Tag resultTag = tagService.createTagByTag(newTag);
         if (resultTag != null) {
@@ -113,6 +115,7 @@ public class TagController {
     @PutMapping(path = "/")
     @ApiOperation("修改某一标签")
     @ApiImplicitParam(name = "modifiedTag", value = "将要修改标签的信息", required = true, dataType = "Tag")
+    @RequiresAuthentication
     public JsonResponse updateTagByTag(@RequestBody Tag modifiedTag) {
         Tag resultTag = tagService.modifyTagByTag(modifiedTag);
         if (resultTag != null) {
@@ -127,6 +130,7 @@ public class TagController {
     @Transactional
     @ApiOperation("删除某一TagID的标签")
     @ApiImplicitParam(name = "id", value = "将要删除标签的ID", required = true, dataType = "Int")
+    @RequiresAuthentication
     public JsonResponse deleteTagByTagId(@PathVariable(value = "id") Integer tagId) {
         Integer result = tagService.deleteTagByTagId(tagId);
         if (result == 1) {
